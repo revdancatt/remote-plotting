@@ -1,0 +1,31 @@
+{
+  "name": "remote-plotting",
+  "version": "1.0.0",
+  "description": "To remotely control the plotter",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://revdancatt@github.com/revdancatt/remote-plotting.git"
+  },
+  "author": "revdancatt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/revdancatt/remote-plotting/issues"
+  },
+  "homepage": "https://github.com/revdancatt/remote-plotting#readme",
+  "devDependencies": {
+    "standard": "^17.0.0"
+  },
+  "dependencies": {
+    "await-spawn": "^4.0.2",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "gradient-string": "^2.0.1",
+    "moment": "^2.29.3"
+  }
+}

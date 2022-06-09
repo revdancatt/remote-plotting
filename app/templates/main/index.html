@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+
+<head>
+  {{> head}}
+</head>
+
+<body>
+  {{> nav}}
+
+  <section class="hero is-primary">
+    <div class="hero-body shader">
+      <div class="container">
+        <p class="title is-size-1 has-text-weight-bold mb-0">
+          Plotter remove control
+        </p>
+        <p class="subtitle has-text-weight-bold pt-5">
+          Make the plotter do things
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section has-background-white-ter" style="padding: 1rem 1.5rem">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+          <li class="is-active"><a href="/" aria-current="page">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  {{#if version}}
+    <section class="section has-background-white">
+      <div class="container">
+        <pre>{{version}}</pre>
+      </div>
+    </section>
+    <hr>
+  {{/if}}
+
+  {{#if svgfile}}
+    <section class="section has-background-white">
+      <div class="container">
+        <h2 class="title is-4">{{svgfile}}</h2>
+        <form action="/{{svgfile}}" method="post">
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-link" name="action" value="preview">Preview</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <hr>
+  {{/if}}
+
+  <section class="section has-background-white">
+    <div class="container">
+      <ul>
+        {{#each svgFiles}}
+          <li><a href="/{{@this}}">{{@this}}</a></li>
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+
+  <hr>
+
+  <section class="section has-background-white">
+    <div class="container">
+      <form action="/{{svgfile}}" method="post">
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button is-link" name="action" value="version">Version</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  {{> footer}}
+</body>
+
+</html>
