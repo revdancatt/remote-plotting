@@ -3,6 +3,8 @@
 
 <head>
   {{> head}}
+  {{#if svgObj.started}}
+    <meta http-equiv="refresh" content="5">{{/if}}
 </head>
 
 <body>
@@ -12,7 +14,7 @@
     <div class="hero-body shader">
       <div class="container">
         <p class="title is-size-1 has-text-weight-bold mb-0">
-          Plotter remove control
+          Plotter remote control
         </p>
         <p class="subtitle has-text-weight-bold pt-5">
           Make the plotter do things
@@ -25,7 +27,7 @@
     <div class="container">
       <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
-          <li class="is-active"><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/">Home</a></li>
         </ul>
       </nav>
     </div>
@@ -44,10 +46,86 @@
     <section class="section has-background-white">
       <div class="container">
         <h2 class="title is-4">{{svgfile}}</h2>
+
+        {{#if svgObj.started}}
+          <div>
+            <table class="table mb-5 has-background-info-light is-fullwidth is-striped">
+              <tr>
+                <td width="25%">Elapsed</td>
+                <td>{{durationPrecise svgObj.started null}}</td>
+              </tr>
+              <tr>
+                <td>Remaining time</td>
+                <td>{{durationPrecise null svgObj.endTime}}</td>
+              </tr>
+              <tr>
+                <td>End time</td>
+                <td>{{timePrettyShort svgObj.endTime}}</td>
+              </tr>
+              <tr>
+                <td colspan="2"><progress class="progress is-large is-primary" value="{{svgObj.percent}}"
+                    max="100">{{svgObj.percent}}%</progress></td>
+              </tr>
+            </table>
+          </div>
+        {{/if}}
+
+        {{#if svgObj.time}}
+          <table class="table mb-5">
+            <tr>
+              <td>Plot time:</td>
+              <td>
+                {{#if svgObj.time.hours}}{{svgObj.time.hours}}h {{/if}}
+                {{#if svgObj.time.minutes}}{{svgObj.time.minutes}}m {{/if}}
+                {{#if svgObj.time.seconds}}{{svgObj.time.seconds}}s {{/if}}
+              </td>
+            </tr>
+            <tr>
+              <td>Distance</td>
+              <td>{{svgObj.distance}}m</td>
+            </tr>
+            <tr>
+              <td>Completion time:</td>
+              <td>{{timePrettyShort svgObj.time.futureTime}}</td>
+            </tr>
+            <tr>
+              <td>Using constant speed</td>
+              <td>{{#if svgObj.constSpeed}}True{{else}}False{{/if}}</td>
+            </tr>
+            <tr>
+              <td>Speed</td>
+              <td>{{svgObj.speed}}</td>
+            </tr>
+          </table>
+        {{/if}}
+
         <form action="/{{svgfile}}" method="post">
+          <div class="field is-grouped mt-5">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Speed</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="number" name="speed" value="{{svgObj.speed}}">
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="checkbox control">
+              <input type="checkbox" name="constSpeed" value="true" {{#if svgObj.constSpeed}}checked{{/if}}>
+              Constant speed
+            </label>
+          </div>
+
           <div class="field is-grouped">
             <div class="control">
               <button class="button is-link" name="action" value="preview">Preview</button>
+              {{#if svgObj.time}}<button class="button is-primary" name="action" value="plot">Plot</button>{{/if}}
             </div>
           </div>
         </form>
@@ -61,7 +139,7 @@
     <div class="container">
       <ul>
         {{#each svgFiles}}
-          <li><a href="/{{@this}}">{{@this}}</a></li>
+          <li>{{status}} <a href="/{{filename}}">{{filename}}</a></li>
         {{/each}}
       </ul>
     </div>
@@ -75,6 +153,8 @@
         <div class="field is-grouped">
           <div class="control">
             <button class="button is-link" name="action" value="version">Version</button>
+            <button class="button is-primary" name="action" value="toggle">Toggle</button>
+            <button class="button is-primary" name="action" value="align">Align</button>
           </div>
         </div>
       </form>

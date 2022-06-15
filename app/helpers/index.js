@@ -117,6 +117,11 @@ exports.timePretty = t => {
   return moment(t).format('dddd, MMMM Do YYYY, h:mm:ss a')
 }
 
+exports.timePrettyShort = t => {
+  if (t === null || t === undefined) return ''
+  return moment(t).format('h:mm:ssa')
+}
+
 const datePrettyNoYear = t => {
   if (t === null || t === undefined) return ''
   return moment(t).format('dddd, MMMM Do')
@@ -148,13 +153,13 @@ const timeAgo = backThen => {
 }
 exports.timeAgo = timeAgo
 
-const timeUntil = backThen => {
-  if (backThen === null || backThen === undefined) return ''
+const timeUntil = theFuture => {
+  if (theFuture === null || theFuture === undefined) return ''
 
   // const d = new Date()
   // const bd = new Date(backThen)
   // if (d.getMonth() === bd.getMonth() && d.getDate() === bd.getDate()) return 'Today'
-  return moment(new Date().getTime()).to(backThen)
+  return moment(new Date().getTime()).to(theFuture)
 }
 exports.timeUntil = timeUntil
 
@@ -176,8 +181,11 @@ exports.duration = (startTime, endTime) => {
 }
 
 exports.durationPrecise = (startTime, endTime) => {
-  const start = moment(startTime)
-  const end = moment(endTime)
+  let start = moment(new Date())
+  if (startTime) start = moment(startTime)
+  let end = moment(new Date())
+  if (endTime) end = moment(endTime)
+
   let seconds = end.diff(start, 'seconds')
   let minutes = 0
   let hours = 0
@@ -211,7 +219,11 @@ exports.durationPrecise = (startTime, endTime) => {
   if (seconds === 1) niceDiff.push(`${seconds} second`)
   if (seconds > 1) niceDiff.push(`${seconds} seconds`)
   if (niceDiff.length > 0) {
-    niceDiff[niceDiff.length - 1] = `and ${niceDiff[niceDiff.length - 1]}`
+    if (niceDiff.length === 1) {
+      niceDiff[niceDiff.length - 1] = `${niceDiff[niceDiff.length - 1]}`
+    } else {
+      niceDiff[niceDiff.length - 1] = `and ${niceDiff[niceDiff.length - 1]}`
+    }
   }
   return niceDiff.join(', ')
 }
