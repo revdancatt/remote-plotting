@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+
+<head>
+  {{> head}}
+  {{#if svgObj.started}}
+    <meta http-equiv="refresh" content="5">{{/if}}
+</head>
+
+<body>
+  {{> nav}}
+
+  <section class="hero is-primary">
+    <div class="hero-body shader">
+      <div class="container">
+        <p class="title is-size-1 has-text-weight-bold mb-0">
+          Plotter remote control sdfsd
+        </p>
+        <p class="subtitle has-text-weight-bold pt-5">
+          Make the plotter do things
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section has-background-white-ter" style="padding: 1rem 1.5rem">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/dir">Select Directory</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  **{{req.templateValues.directories}}**
+  {{{dumpThis req.templateValues.directories}}}
+  <section class="section has-background-white">
+    <div class="container">
+      <ul>
+        {{#each directories}}
+          <li><a href="/{{@this}}">{{@this}}</a></li>
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+
+  {{> footer}}
+</body>
+
+</html>

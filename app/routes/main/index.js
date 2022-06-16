@@ -4,7 +4,7 @@ const {
 const path = require('path')
 const fs = require('fs')
 
-function runCommand (command) {
+function runCommand(command) {
   return new Promise(function (resolve, reject) {
     const s = exec(command)
     s.stdout.on('data', (data) => {
@@ -25,7 +25,22 @@ function runCommand (command) {
 exports.index = async (req, res) => {
   const startTime = new Date().getTime()
 
-  const downloadDir = process.env.DOWNLOADDIR
+  let downloadDir = process.env.DOWNLOADDIR
+
+  //  If we've been passed an svgfile, but it doesn't have an '.svg' then it's probably a folder
+  if (req.params.svgfile) {
+    if (!req.params.svgfile.includes('.svg')) {
+      req.params.newDir = req.params.svgfile
+      delete req.params.svgfile
+    }
+  }
+
+  //  If we have a directory, then we need to switch to that one
+  req.templateValues.newDir = ''
+  if (req.params.newDir) {
+    downloadDir = path.join(downloadDir, req.params.newDir)
+    req.templateValues.newDir = req.params.newDir + '/'
+  }
 
   //  Grab all the files inside it too
   const svgFiles = fs.readdirSync(downloadDir).filter((file) => {
@@ -72,10 +87,20 @@ exports.index = async (req, res) => {
       // req.templateValues.version = bl.toString()
     }
 
+    //  delete the files
+    if (req.body.action === 'delete') {
+      if (fs.existsSync(path.join(downloadDir, req.params.svgfile))) fs.unlinkSync(path.join(downloadDir, req.params.svgfile))
+      if (fs.existsSync(jsonFile)) fs.unlinkSync(jsonFile)
+      if (req.params.newDir) return res.redirect(`/${req.params.newDir}`)
+      return res.redirect('/')
+    }
+
     if (req.body.action === 'preview') {
       let preview = null
       try {
-        let params = `axicli /Users/danielcatt/Downloads/${req.params.svgfile} --config /Users/danielcatt/Downloads/axidraw_conf_A1.py --model 4 --report_time --preview`
+        let params = 'axicli /Users/danielcatt/Downloads/'
+        if (req.params.newDir) params += `${req.params.newDir}/`
+        params += `${req.params.svgfile} --config /Users/danielcatt/Downloads/axidraw_conf_A1.py --model 4 --report_time --preview`
         if (req.body.constSpeed) params += ' --const_speed'
         params += ` -s ${req.body.speed}`
         preview = await runCommand(params)
@@ -117,11 +142,14 @@ exports.index = async (req, res) => {
       jsonObj = JSON.parse(fs.readFileSync(jsonFile), 'utf-8')
       jsonObj.started = new Date().getTime()
       await fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
-      let params = `axicli /Users/danielcatt/Downloads/${req.params.svgfile} --config /Users/danielcatt/Downloads/axidraw_conf_A1.py --model 4`
+      let params = 'axicli /Users/danielcatt/Downloads/'
+      params += `${req.params.svgfile} --config /Users/danielcatt/Downloads/axidraw_conf_A1.py --model 4`
+      if (req.params.newDir) params += `${req.params.newDir}/`
       if (req.body.constSpeed) params += ' --const_speed'
       params += ` -s ${req.body.speed}`
       runCommand(params)
     }
+    if (req.params.newDir) return res.redirect(`/${req.params.newDir}/${req.params.svgfile}`)
     return res.redirect(`/${req.params.svgfile}`)
   }
 
@@ -158,4 +186,16 @@ exports.index = async (req, res) => {
 
   req.templateValues.elapsed = new Date().getTime() - startTime
   return res.render('main/index', req.templateValues)
+}
+
+exports.dir = async (req, res) => {
+  const startTime = new Date().getTime()
+
+  const downloadDir = process.env.DOWNLOADDIR
+  req.templateValues.directories = fs.readdirSync(downloadDir).filter((file) => {
+    return fs.statSync(path.join(downloadDir, file)).isDirectory()
+  })
+
+  req.templateValues.elapsed = new Date().getTime() - startTime
+  return res.render('dir/index', req.templateValues)
 }

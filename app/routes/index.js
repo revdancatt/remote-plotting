@@ -16,7 +16,10 @@ router.use(function (req, res, next) {
 
 router.get('/', main.index)
 router.post('/', main.index)
+router.get('/dir', main.dir)
 router.get('/:svgfile', main.index)
 router.post('/:svgfile', main.index)
+router.get('/:newDir/:svgfile', main.index)
+router.post('/:newDir/:svgfile', main.index)
 
 module.exports = router

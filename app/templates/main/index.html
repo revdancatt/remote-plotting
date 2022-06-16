@@ -28,6 +28,10 @@
       <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
           <li><a href="/">Home</a></li>
+          <li><a href="/dir">Select Directory</a></li>
+          {{#if newDir}}
+            <li class="is-active"><a href="#" aria-current="page">{{newDir}}</a></li>
+          {{/if}}
         </ul>
       </nav>
     </div>
@@ -99,7 +103,7 @@
           </table>
         {{/if}}
 
-        <form action="/{{svgfile}}" method="post">
+        <form action="/{{newDir}}{{svgfile}}" method="post">
           <div class="field is-grouped mt-5">
             <div class="field is-horizontal">
               <div class="field-label is-normal">
@@ -126,6 +130,7 @@
             <div class="control">
               <button class="button is-link" name="action" value="preview">Preview</button>
               {{#if svgObj.time}}<button class="button is-primary" name="action" value="plot">Plot</button>{{/if}}
+              <button class="button is-danger" name="action" value="delete">Delete</button>
             </div>
           </div>
         </form>
@@ -139,17 +144,16 @@
     <div class="container">
       <ul>
         {{#each svgFiles}}
-          <li>{{status}} <a href="/{{filename}}">{{filename}}</a></li>
+          <li>{{status}} <a href="/{{../newDir}}{{filename}}">{{filename}}</a></li>
         {{/each}}
       </ul>
     </div>
   </section>
 
   <hr>
-
   <section class="section has-background-white">
     <div class="container">
-      <form action="/{{svgfile}}" method="post">
+      <form action="/{{newDir}}{{svgfile}}" method="post">
         <div class="field is-grouped">
           <div class="control">
             <button class="button is-link" name="action" value="version">Version</button>
