@@ -14,7 +14,7 @@
     <div class="hero-body shader">
       <div class="container">
         <p class="title is-size-1 has-text-weight-bold mb-0">
-          Plotter remote control sdfsd
+          Plotter remote control
         </p>
         <p class="subtitle has-text-weight-bold pt-5">
           Make the plotter do things
@@ -34,8 +34,6 @@
     </div>
   </section>
 
-  **{{req.templateValues.directories}}**
-  {{{dumpThis req.templateValues.directories}}}
   <section class="section has-background-white">
     <div class="container">
       <ul>
@@ -43,6 +41,24 @@
           <li><a href="/{{@this}}">{{@this}}</a></li>
         {{/each}}
       </ul>
+    </div>
+  </section>
+
+  <hr>
+
+  <section class="section has-background-white">
+    <div class="container">
+      <form action="/{{newDir}}{{svgfile}}" method="post">
+        <div class="field has-addons">
+          <div class="control">
+            <input class="input" type="text" name="newDirectory" value="">
+          </div>
+          <div class="control">
+            <button class="button is-primary" name="action" value="makeDirectory">Make directory</button>
+          </div>
+        </div>
+    </div>
+    </form>
     </div>
   </section>
 

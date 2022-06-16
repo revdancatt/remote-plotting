@@ -4,7 +4,7 @@ const {
 const path = require('path')
 const fs = require('fs')
 
-function runCommand(command) {
+function runCommand (command) {
   return new Promise(function (resolve, reject) {
     const s = exec(command)
     s.stdout.on('data', (data) => {
@@ -73,6 +73,7 @@ exports.index = async (req, res) => {
   }
 
   //  If we have been sent an action, then we need to do that here
+
   if (req.body.action) {
     if (req.body.action === 'toggle') {
       await runCommand('axicli --mode toggle')
@@ -95,12 +96,30 @@ exports.index = async (req, res) => {
       return res.redirect('/')
     }
 
+    if (req.body.action === 'deleteDirectory') {
+      fs.rmdirSync(downloadDir)
+      return res.redirect('/')
+    }
+
+    if (req.body.action === 'uploadFile') {
+      const svgFile = req.files.thisfile
+      svgFile.mv(path.join(downloadDir, svgFile.name))
+      if (req.params.newDir) return res.redirect(`/${req.params.newDir}/${svgFile.name}`)
+      return res.redirect(`/${svgFile.name}`)
+    }
+
+    //  Make a new directory
+    if (req.body.action === 'makeDirectory') {
+      fs.mkdirSync(path.join(downloadDir, req.body.newDirectory))
+      return res.redirect(`/${req.body.newDirectory}`)
+    }
+
     if (req.body.action === 'preview') {
       let preview = null
       try {
-        let params = 'axicli /Users/danielcatt/Downloads/'
+        let params = `axicli ${process.env.DOWNLOADDIR}/`
         if (req.params.newDir) params += `${req.params.newDir}/`
-        params += `${req.params.svgfile} --config /Users/danielcatt/Downloads/axidraw_conf_A1.py --model 4 --report_time --preview`
+        params += `${req.params.svgfile} --config ${process.env.DOWNLOADDIR}/axidraw_conf_A1.py --model 4 --report_time --preview`
         if (req.body.constSpeed) params += ' --const_speed'
         params += ` -s ${req.body.speed}`
         preview = await runCommand(params)
@@ -142,15 +161,20 @@ exports.index = async (req, res) => {
       jsonObj = JSON.parse(fs.readFileSync(jsonFile), 'utf-8')
       jsonObj.started = new Date().getTime()
       await fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
-      let params = 'axicli /Users/danielcatt/Downloads/'
-      params += `${req.params.svgfile} --config /Users/danielcatt/Downloads/axidraw_conf_A1.py --model 4`
+      let params = `axicli ${process.env.DOWNLOADDIR}/`
       if (req.params.newDir) params += `${req.params.newDir}/`
+      params += `${req.params.svgfile} --config ${process.env.DOWNLOADDIR}/axidraw_conf_A1.py --model 4`
       if (req.body.constSpeed) params += ' --const_speed'
       params += ` -s ${req.body.speed}`
       runCommand(params)
     }
-    if (req.params.newDir) return res.redirect(`/${req.params.newDir}/${req.params.svgfile}`)
-    return res.redirect(`/${req.params.svgfile}`)
+
+    if (req.params.newDir) {
+      if (req.params.svgfile) return res.redirect(`/${req.params.newDir}/${req.params.svgfile}`)
+      return res.redirect(`/${req.params.newDir}`)
+    }
+    if (req.params.svgfile) return res.redirect(`/${req.params.svgfile}`)
+    return res.redirect('/')
   }
 
   //  If we have a jsonFile of the thing we are looking at read it in

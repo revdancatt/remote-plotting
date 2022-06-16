@@ -151,6 +151,7 @@
   </section>
 
   <hr>
+
   <section class="section has-background-white">
     <div class="container">
       <form action="/{{newDir}}{{svgfile}}" method="post">
@@ -161,7 +162,47 @@
             <button class="button is-primary" name="action" value="align">Align</button>
           </div>
         </div>
+        {{#if newDir}}
+          {{#unless svgFiles.length}}
+            <div class="field">
+              <div class="control">
+                <button class="button is-danger" name="action" value="deleteDirectory">Delete current directory</button>
+              </div>
+            </div>
+          {{/unless}}
+        {{/if}}
       </form>
+
+      <form action="/{{newDir}}{{svgfile}}" method="post" enctype="multipart/form-data" class="mt-5">
+
+        <div id="file-js-example" class="file has-name field has-addons">
+          <label class="file-label">
+            <input class="file-input" type="file" name="thisfile">
+            <span class="file-cta">
+              <span class="file-label">
+                Choose a file…
+              </span>
+            </span>
+            <span class="file-name">
+              No file uploaded
+            </span>
+          </label>
+          <div class="control">
+            <button class="button is-link" name="action" value="uploadFile">Upload</button>
+          </div>
+        </div>
+
+        <script>
+          const fileInput = document.querySelector('#file-js-example input[type=file]');
+          fileInput.onchange = () => {
+            if (fileInput.files.length > 0) {
+              const fileName = document.querySelector('#file-js-example .file-name');
+              fileName.textContent = fileInput.files[0].name;
+            }
+          }
+        </script>
+      </form>
+
     </div>
   </section>
 

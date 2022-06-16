@@ -3,6 +3,7 @@ require('dotenv').config()
 const path = require('path')
 const express = require('express')
 const exphbs = require('express-handlebars')
+const fileUpload = require('express-fileupload')
 const routes = require('./app/routes/index.js')
 const bodyParser = require('body-parser')
 const http = require('http')
@@ -31,6 +32,9 @@ app.use(
     extended: true
   })
 )
+app.use(fileUpload({
+  createParentPath: true
+}))
 
 app.use('/', routes)
 
