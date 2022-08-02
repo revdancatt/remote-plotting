@@ -1,20 +1,20 @@
 const {
-  exec
+  spawn
 } = require('node:child_process')
 const path = require('path')
 const fs = require('fs')
 
-function runCommand (command) {
+function runCommand(args) {
   return new Promise(function (resolve, reject) {
-    const s = exec(command)
+    const s = spawn('axicli', args)
     s.stdout.on('data', (data) => {
       // console.log(`stdout: ${data}`)
-      resolve(data.trim())
+      resolve(data.toString().trim())
     })
     // For some reason axicli gives us the data in the stderr rather than out, so
     //  I guess we do it here
     s.stderr.on('data', (data) => {
-      resolve(data.trim())
+      resolve(data.toString().trim())
     })
     s.on('close', (code) => {
       // console.log(`child process exited with code ${code}`)
@@ -76,20 +76,20 @@ exports.index = async (req, res) => {
 
   if (req.body.action) {
     if (req.body.action === 'toggle') {
-      await runCommand('axicli --mode toggle')
+      await runCommand(['--mode', 'toggle'])
     }
 
     if (req.body.action === 'align') {
-      await runCommand('axicli --mode align')
+      await runCommand(['--mode', 'align'])
     }
 
     if (req.body.action === 'version') {
-      global.version = await runCommand('axicli version')
+      global.version = await runCommand(['version'])
       // req.templateValues.version = bl.toString()
     }
 
     if (req.body.action === 'sysinfo') {
-      global.sysinfo = await runCommand('axicli -m sysinfo')
+      global.sysinfo = await runCommand(['-m', 'sysinfo'])
     }
 
     //  delete the files
@@ -121,11 +121,18 @@ exports.index = async (req, res) => {
     if (req.body.action === 'preview') {
       let preview = null
       try {
-        let params = `axicli ${process.env.DOWNLOADDIR}/`
-        if (req.params.newDir) params += `${req.params.newDir}/`
-        params += `${req.params.svgfile} --model 5 --report_time --preview`
-        if (req.body.constSpeed) params += ' --const_speed'
-        params += ` -s ${req.body.speed}`
+        const params = []
+        let file = `${process.env.DOWNLOADDIR}/`
+        if (req.params.newDir) file += `${req.params.newDir}/`
+        file += `${req.params.svgfile}`
+        params.push(file)
+        params.push('--model')
+        params.push('5')
+        params.push('--report_time')
+        params.push('--preview')
+        if (req.body.constSpeed) params.push('--const_speed')
+        params.push('-s')
+        params.push(req.body.speed)
         preview = await runCommand(params)
         const getTime = preview.replace('Estimated print time: ', '').split(' ')
         const times = getTime[0].split(':')
@@ -165,11 +172,17 @@ exports.index = async (req, res) => {
       jsonObj = JSON.parse(fs.readFileSync(jsonFile), 'utf-8')
       jsonObj.started = new Date().getTime()
       await fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
-      let params = `axicli ${process.env.DOWNLOADDIR}/`
-      if (req.params.newDir) params += `${req.params.newDir}/`
-      params += `${req.params.svgfile} --model 5`
-      if (req.body.constSpeed) params += ' --const_speed'
-      params += ` -s ${req.body.speed}`
+
+      const params = []
+      let file = `${process.env.DOWNLOADDIR}/`
+      if (req.params.newDir) file += `${req.params.newDir}/`
+      file += `${req.params.svgfile}`
+      params.push(file)
+      params.push('--model')
+      params.push('5')
+      if (req.body.constSpeed) params.push('--const_speed')
+      params.push('-s')
+      params.push(req.body.speed)
       runCommand(params)
     }
 
