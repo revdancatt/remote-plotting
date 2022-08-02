@@ -46,6 +46,15 @@
     <hr>
   {{/if}}
 
+  {{#if sysinfo}}
+    <section class="section has-background-white">
+      <div class="container">
+        <pre>{{sysinfo}}</pre>
+      </div>
+    </section>
+    <hr>
+  {{/if}}
+
   {{#if svgfile}}
     <section class="section has-background-white">
       <div class="container">
@@ -157,6 +166,7 @@
       <form action="/{{newDir}}{{svgfile}}" method="post">
         <div class="field is-grouped">
           <div class="control">
+            <button class="button is-link" name="action" value="sysinfo">Sysinfo</button>
             <button class="button is-link" name="action" value="version">Version</button>
             <button class="button is-primary" name="action" value="toggle">Toggle</button>
             <button class="button is-primary" name="action" value="align">Align</button>

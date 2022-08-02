@@ -88,6 +88,10 @@ exports.index = async (req, res) => {
       // req.templateValues.version = bl.toString()
     }
 
+    if (req.body.action === 'sysinfo') {
+      global.sysinfo = await runCommand('axicli -m sysinfo')
+    }
+
     //  delete the files
     if (req.body.action === 'delete') {
       if (fs.existsSync(path.join(downloadDir, req.params.svgfile))) fs.unlinkSync(path.join(downloadDir, req.params.svgfile))
@@ -119,7 +123,7 @@ exports.index = async (req, res) => {
       try {
         let params = `axicli ${process.env.DOWNLOADDIR}/`
         if (req.params.newDir) params += `${req.params.newDir}/`
-        params += `${req.params.svgfile} --config ${process.env.DOWNLOADDIR}/axidraw_conf_A1.py --model 4 --report_time --preview`
+        params += `${req.params.svgfile} --model 5 --report_time --preview`
         if (req.body.constSpeed) params += ' --const_speed'
         params += ` -s ${req.body.speed}`
         preview = await runCommand(params)
@@ -163,7 +167,7 @@ exports.index = async (req, res) => {
       await fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
       let params = `axicli ${process.env.DOWNLOADDIR}/`
       if (req.params.newDir) params += `${req.params.newDir}/`
-      params += `${req.params.svgfile} --config ${process.env.DOWNLOADDIR}/axidraw_conf_A1.py --model 4`
+      params += `${req.params.svgfile} --model 5`
       if (req.body.constSpeed) params += ' --const_speed'
       params += ` -s ${req.body.speed}`
       runCommand(params)
@@ -206,6 +210,11 @@ exports.index = async (req, res) => {
   if (global.version) {
     req.templateValues.version = global.version
     delete global.version
+  }
+
+  if (global.sysinfo) {
+    req.templateValues.sysinfo = global.sysinfo
+    delete global.sysinfo
   }
 
   req.templateValues.elapsed = new Date().getTime() - startTime
