@@ -135,6 +135,13 @@
             </label>
           </div>
 
+          <div class="field">
+            <label class="checkbox control">
+              <input type="checkbox" name="brushless" value="true" {{#if svgObj.brushless}}checked{{/if}}>
+              Brushless servo
+            </label>
+          </div>
+
           <div class="field is-grouped">
             <div class="control">
               <button class="button is-link" name="action" value="preview">Preview</button>
@@ -169,6 +176,8 @@
             <button class="button is-link" name="action" value="sysinfo">Sysinfo</button>
             <button class="button is-link" name="action" value="version">Version</button>
             <button class="button is-primary" name="action" value="toggle">Toggle</button>
+            <button class="button is-primary" name="action" value="toggle50">Toggle 50%</button>
+            <button class="button is-primary" name="action" value="toggle100">Toggle 100%</button>
             <button class="button is-primary" name="action" value="align">Align</button>
           </div>
         </div>

@@ -4,7 +4,7 @@ const {
 const path = require('path')
 const fs = require('fs')
 
-function runCommand(args) {
+function runCommand (args) {
   return new Promise(function (resolve, reject) {
     const s = spawn('axicli', args)
     s.stdout.on('data', (data) => {
@@ -79,6 +79,14 @@ exports.index = async (req, res) => {
       await runCommand(['--mode', 'toggle'])
     }
 
+    if (req.body.action === 'toggle50') {
+      await runCommand(['--mode', 'toggle', '--pen_pos_up', '50'])
+    }
+
+    if (req.body.action === 'toggle100') {
+      await runCommand(['--mode', 'toggle', '--pen_pos_up', '100'])
+    }
+
     if (req.body.action === 'align') {
       await runCommand(['--mode', 'align'])
     }
@@ -131,8 +139,13 @@ exports.index = async (req, res) => {
         params.push('--report_time')
         params.push('--preview')
         if (req.body.constSpeed) params.push('--const_speed')
+        if (req.body.brushless) params.push('--penlift')
+        if (req.body.brushless) params.push('3')
+        if (req.body.brushless) params.push('--pen_pos_up')
+        if (req.body.brushless) params.push('50')
         params.push('-s')
         params.push(req.body.speed)
+        console.log(params.join(' '))
         preview = await runCommand(params)
         const getTime = preview.replace('Estimated print time: ', '').split(' ')
         const times = getTime[0].split(':')
@@ -160,6 +173,8 @@ exports.index = async (req, res) => {
         jsonObj.distance = distance
         jsonObj.constSpeed = false
         if (req.body.constSpeed) jsonObj.constSpeed = true
+        jsonObj.brushless = false
+        if (req.body.brushless) jsonObj.brushless = true
         jsonObj.speed = req.body.speed
         fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
       } catch (er) {
@@ -181,6 +196,10 @@ exports.index = async (req, res) => {
       params.push('--model')
       params.push('5')
       if (req.body.constSpeed) params.push('--const_speed')
+      if (req.body.brushless) params.push('--penlift')
+      if (req.body.brushless) params.push('3')
+      if (req.body.brushless) params.push('--pen_pos_up')
+      if (req.body.brushless) params.push('50')
       params.push('-s')
       params.push(req.body.speed)
       runCommand(params)
