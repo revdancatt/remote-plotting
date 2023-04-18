@@ -36,6 +36,7 @@ Follow these steps to install and set up the project on your local machine:
 
 1. Install node.js, axicli and update your EBB firmware
 2. Clone the repository: `git clone https://github.com/revdancatt/remote-plotting.git`
+3. Change into the new folder `cd remote-plotting`
 3. Run `npm install`
 4. Copy `.env.example` to `.env` and edit it to update your environment variables
 5. Start it with `npm start`
