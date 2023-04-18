@@ -6,6 +6,7 @@ const fs = require('fs')
 
 function runCommand (args) {
   return new Promise(function (resolve, reject) {
+    console.log('Running command: axicli ' + args.join(' '))
     const s = spawn('axicli', args)
     s.stdout.on('data', (data) => {
       // console.log(`stdout: ${data}`)
@@ -25,7 +26,7 @@ function runCommand (args) {
 exports.index = async (req, res) => {
   const startTime = new Date().getTime()
 
-  let downloadDir = process.env.DOWNLOADDIR
+  let svgDIR = process.env.SVGDIR
 
   //  If we've been passed an svgfile, but it doesn't have an '.svg' then it's probably a folder
   if (req.params.svgfile) {
@@ -38,13 +39,13 @@ exports.index = async (req, res) => {
   //  If we have a directory, then we need to switch to that one
   req.templateValues.newDir = ''
   if (req.params.newDir) {
-    downloadDir = path.join(downloadDir, req.params.newDir)
+    svgDIR = path.join(svgDIR, req.params.newDir)
     req.templateValues.newDir = req.params.newDir + '/'
   }
 
   //  Grab all the files inside it too
-  const svgFiles = fs.readdirSync(downloadDir).filter((file) => {
-    return fs.statSync(path.join(downloadDir, file)).isFile()
+  const svgFiles = fs.readdirSync(svgDIR).filter((file) => {
+    return fs.statSync(path.join(svgDIR, file)).isFile()
   }).filter((file) => {
     return file[0] !== '.'
   }).filter((file) => {
@@ -55,9 +56,9 @@ exports.index = async (req, res) => {
     const fileObj = {
       filename: file
     }
-    if (fs.existsSync(path.join(downloadDir, file.replace('.svg', '.json')))) {
+    if (fs.existsSync(path.join(svgDIR, file.replace('.svg', '.json')))) {
       fileObj.status = '📊'
-      const statusObj = JSON.parse(fs.readFileSync(path.join(downloadDir, file.replace('.svg', '.json')), 'utf-8'))
+      const statusObj = JSON.parse(fs.readFileSync(path.join(svgDIR, file.replace('.svg', '.json')), 'utf-8'))
       if (statusObj.started) fileObj.status = '🦾'
     }
     return fileObj
@@ -69,7 +70,7 @@ exports.index = async (req, res) => {
   let jsonObj = {}
   if (req.params.svgfile) {
     req.templateValues.svgfile = req.params.svgfile
-    jsonFile = path.join(downloadDir, req.params.svgfile.replace('.svg', '.json'))
+    jsonFile = path.join(svgDIR, req.params.svgfile.replace('.svg', '.json'))
   }
 
   //  If we have been sent an action, then we need to do that here
@@ -80,15 +81,15 @@ exports.index = async (req, res) => {
     }
 
     if (req.body.action === 'toggle50') {
-      await runCommand(['--mode', 'toggle', '--pen_pos_up', '50'])
-    }
-
-    if (req.body.action === 'toggle100') {
-      await runCommand(['--mode', 'toggle', '--pen_pos_up', '100'])
+      await runCommand(['--mode', 'toggle', '--penlift', '3', '--pen_pos_up', '50'])
     }
 
     if (req.body.action === 'align') {
       await runCommand(['--mode', 'align'])
+    }
+
+    if (req.body.action === 'walk_home') {
+      await runCommand(['--mode', 'manual', '--manual_cmd', 'walk_home'])
     }
 
     if (req.body.action === 'version') {
@@ -102,27 +103,27 @@ exports.index = async (req, res) => {
 
     //  delete the files
     if (req.body.action === 'delete') {
-      if (fs.existsSync(path.join(downloadDir, req.params.svgfile))) fs.unlinkSync(path.join(downloadDir, req.params.svgfile))
+      if (fs.existsSync(path.join(svgDIR, req.params.svgfile))) fs.unlinkSync(path.join(svgDIR, req.params.svgfile))
       if (fs.existsSync(jsonFile)) fs.unlinkSync(jsonFile)
       if (req.params.newDir) return res.redirect(`/${req.params.newDir}`)
       return res.redirect('/')
     }
 
     if (req.body.action === 'deleteDirectory') {
-      fs.rmdirSync(downloadDir)
+      fs.rmdirSync(svgDIR)
       return res.redirect('/')
     }
 
     if (req.body.action === 'uploadFile') {
       const svgFile = req.files.thisfile
-      svgFile.mv(path.join(downloadDir, svgFile.name))
+      svgFile.mv(path.join(svgDIR, svgFile.name))
       if (req.params.newDir) return res.redirect(`/${req.params.newDir}/${svgFile.name}`)
       return res.redirect(`/${svgFile.name}`)
     }
 
     //  Make a new directory
     if (req.body.action === 'makeDirectory') {
-      fs.mkdirSync(path.join(downloadDir, req.body.newDirectory))
+      fs.mkdirSync(path.join(svgDIR, req.body.newDirectory))
       return res.redirect(`/${req.body.newDirectory}`)
     }
 
@@ -130,12 +131,12 @@ exports.index = async (req, res) => {
       let preview = null
       try {
         const params = []
-        let file = `${process.env.DOWNLOADDIR}/`
+        let file = `${process.env.SVGDIR}/`
         if (req.params.newDir) file += `${req.params.newDir}/`
         file += `${req.params.svgfile}`
         params.push(file)
         params.push('--model')
-        params.push('5')
+        params.push(process.env.MODEL)
         params.push('--report_time')
         params.push('--preview')
         if (req.body.constSpeed) params.push('--const_speed')
@@ -145,7 +146,6 @@ exports.index = async (req, res) => {
         if (req.body.brushless) params.push('50')
         params.push('-s')
         params.push(req.body.speed)
-        console.log(params.join(' '))
         preview = await runCommand(params)
         const getTime = preview.replace('Estimated print time: ', '').split(' ')
         const times = getTime[0].split(':')
@@ -189,12 +189,12 @@ exports.index = async (req, res) => {
       await fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
 
       const params = []
-      let file = `${process.env.DOWNLOADDIR}/`
+      let file = `${process.env.SVGDIR}/`
       if (req.params.newDir) file += `${req.params.newDir}/`
       file += `${req.params.svgfile}`
       params.push(file)
       params.push('--model')
-      params.push('5')
+      params.push(process.env.MODEL)
       if (req.body.constSpeed) params.push('--const_speed')
       if (req.body.brushless) params.push('--penlift')
       if (req.body.brushless) params.push('3')
@@ -219,7 +219,7 @@ exports.index = async (req, res) => {
     const futureTime = new Date(new Date().getTime() + (jsonObj.time.totalSeconds * 1000))
     jsonObj.time.futureTime = futureTime
   }
-  if (!jsonObj.speed) jsonObj.speed = 20
+  if (!jsonObj.speed) jsonObj.speed = process.env.DEFAULTSPEED
 
   //  Check to see if we are in progress
   if (jsonObj.started) {
@@ -229,6 +229,7 @@ exports.index = async (req, res) => {
     const remaining = jsonObj.time.totalSeconds - elapsed
     if (remaining <= 0) {
       delete jsonObj.started
+      jsonObj.finished = true
       fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
     } else {
       jsonObj.elapsed = elapsed
@@ -256,9 +257,9 @@ exports.index = async (req, res) => {
 exports.dir = async (req, res) => {
   const startTime = new Date().getTime()
 
-  const downloadDir = process.env.DOWNLOADDIR
-  req.templateValues.directories = fs.readdirSync(downloadDir).filter((file) => {
-    return fs.statSync(path.join(downloadDir, file)).isDirectory()
+  const svgDIR = process.env.SVGDIR
+  req.templateValues.directories = fs.readdirSync(svgDIR).filter((file) => {
+    return fs.statSync(path.join(svgDIR, file)).isDirectory()
   })
 
   req.templateValues.elapsed = new Date().getTime() - startTime

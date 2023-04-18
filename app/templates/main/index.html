@@ -4,7 +4,8 @@
 <head>
   {{> head}}
   {{#if svgObj.started}}
-    <meta http-equiv="refresh" content="5">{{/if}}
+    <meta http-equiv="refresh" content="5">
+  {{/if}}
 </head>
 
 <body>
@@ -36,6 +37,15 @@
       </nav>
     </div>
   </section>
+
+  {{#if svgObj.finished}}
+  <section class="section has-background-info-light">
+    <div class="container">
+      Plot has finished!
+    </div>
+  </section>
+  <hr>
+  {{/if}}
 
   {{#if version}}
     <section class="section has-background-white">
@@ -176,9 +186,9 @@
             <button class="button is-link" name="action" value="sysinfo">Sysinfo</button>
             <button class="button is-link" name="action" value="version">Version</button>
             <button class="button is-primary" name="action" value="toggle">Toggle</button>
-            <button class="button is-primary" name="action" value="toggle50">Toggle 50%</button>
-            <button class="button is-primary" name="action" value="toggle100">Toggle 100%</button>
+            <button class="button is-primary" name="action" value="toggle50">Toggle Brushless</button>
             <button class="button is-primary" name="action" value="align">Align</button>
+            <button class="button is-primary" name="action" value="walk_home">Walk Home</button>
           </div>
         </div>
         {{#if newDir}}
