@@ -50,5 +50,16 @@ if (process.env.NODE_ENV !== 'DEV') {
 }
 
 console.log(gradient('red', 'yellow', 'green', 'blue')('-='.repeat(40)))
+
+// Check that we have valid information in the .env file
+if (!process.env.SVGDIR) {
+  console.log()
+  console.log(gradient('red', 'orange', 'yellow')('ERROR: Missing SVGDIR in .env file'))
+  console.log('Please copy over the .env.example file to .env and fill in the required information')
+  console.log()
+  console.log(gradient('red', 'yellow', 'green', 'blue')('-='.repeat(40)))
+  process.exit(1)
+}
+
 console.log('Listening on port: %s', process.env.PORT)
 http.createServer(app).listen(process.env.PORT)
