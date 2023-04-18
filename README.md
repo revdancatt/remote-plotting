@@ -7,7 +7,7 @@ It's a small web services that runs on the machine connected to the pen plotter,
 
 I run this on OSX running on a MacMini, which I then connect to from my laptop or phone to control, it's ***very*** untested on PC.
 
-![UI](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/ui.png?token=GHSAT0AAAAAACBGWLNXREQNIVLIAVI4WA6OZB6PSKQ)
+![UI](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/ui.png?token=GHSAT0AAAAAACBGWLNWNW7IITEBH6QPZKOKZB6SOFQ)
 
 ----
 
