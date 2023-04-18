@@ -148,11 +148,6 @@ exports.index = async (req, res) => {
         if (req.body.brushless) params.push('50')
         params.push('-s')
         params.push(req.body.speed)
-        if (req.body.webhook.trim() !== '') {
-          params.push('--webhook')
-          params.push('--webhook_url')
-          params.push(req.body.webhook.trim())
-        }
         preview = await runCommand(params)
         const getTime = preview.replace('Estimated print time: ', '').split(' ')
         const times = getTime[0].split(':')
@@ -233,6 +228,7 @@ exports.index = async (req, res) => {
     jsonObj.time.futureTime = futureTime
   }
   if (!jsonObj.speed) jsonObj.speed = process.env.DEFAULTSPEED
+  if (!jsonObj.webhook) jsonObj.webhook = process.env.WEBHOOK.trim()
 
   //  Check to see if we are in progress
   if (jsonObj.started) {
