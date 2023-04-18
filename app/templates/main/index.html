@@ -38,15 +38,6 @@
     </div>
   </section>
 
-  {{#if svgObj.finished}}
-  <section class="section has-background-info-light">
-    <div class="container">
-      Plot has finished!
-    </div>
-  </section>
-  <hr>
-  {{/if}}
-
   {{#if version}}
     <section class="section has-background-white">
       <div class="container">
@@ -123,10 +114,26 @@
         {{/if}}
 
         <form action="/{{newDir}}{{svgfile}}" method="post">
+
           <div class="field is-grouped mt-5">
             <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Speed</label>
+              <div class="field-label is-normal" style="flex-grow: unset;">
+                <label class="label" style="min-width: 80px">Webhook</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control is-expanded is-fullwidth">
+                    <input class="input" style="min-width: 600px;" type="text" name="webhook" value="{{svgObj.webhook}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field is-grouped mt-5">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal" style="flex-grow: unset;">
+                <label class="label" style="min-width: 80px">Speed</label>
               </div>
               <div class="field-body">
                 <div class="field">
@@ -188,11 +195,11 @@
             <button class="button is-primary" name="action" value="toggle">Toggle</button>
             <button class="button is-primary" name="action" value="toggle50">Toggle Brushless</button>
             <button class="button is-primary" name="action" value="align">Align</button>
-            <button class="button is-primary" name="action" value="walk_home">Walk Home</button>
+            <button class="button is-info" name="action" value="walk_home">Walk Home</button>
           </div>
         </div>
         {{#if newDir}}
-          {{#unless svgFiles.length}}
+          {{#unless allFiles.length}}
             <div class="field">
               <div class="control">
                 <button class="button is-danger" name="action" value="deleteDirectory">Delete current directory</button>

@@ -44,11 +44,12 @@ exports.index = async (req, res) => {
   }
 
   //  Grab all the files inside it too
-  const svgFiles = fs.readdirSync(svgDIR).filter((file) => {
+  const allFiles = fs.readdirSync(svgDIR).filter((file) => {
     return fs.statSync(path.join(svgDIR, file)).isFile()
   }).filter((file) => {
     return file[0] !== '.'
-  }).filter((file) => {
+  })
+  const svgFiles = allFiles.filter((file) => {
     const extensionSplit = file.split('.')
     const extension = extensionSplit.pop()
     return extension === 'svg'
@@ -63,6 +64,7 @@ exports.index = async (req, res) => {
     }
     return fileObj
   })
+  req.templateValues.allFiles = allFiles
   req.templateValues.svgFiles = svgFiles
 
   //  See if we have been passed a single svgfile
@@ -146,6 +148,11 @@ exports.index = async (req, res) => {
         if (req.body.brushless) params.push('50')
         params.push('-s')
         params.push(req.body.speed)
+        if (req.body.webhook.trim() !== '') {
+          params.push('--webhook')
+          params.push('--webhook_url')
+          params.push(req.body.webhook.trim())
+        }
         preview = await runCommand(params)
         const getTime = preview.replace('Estimated print time: ', '').split(' ')
         const times = getTime[0].split(':')
@@ -176,6 +183,7 @@ exports.index = async (req, res) => {
         jsonObj.brushless = false
         if (req.body.brushless) jsonObj.brushless = true
         jsonObj.speed = req.body.speed
+        jsonObj.webhook = req.body.webhook.trim()
         fs.writeFileSync(jsonFile, JSON.stringify(jsonObj, null, 4), 'utf-8')
       } catch (er) {
         console.log('ERROR')
@@ -202,6 +210,11 @@ exports.index = async (req, res) => {
       if (req.body.brushless) params.push('50')
       params.push('-s')
       params.push(req.body.speed)
+      if (req.body.webhook.trim() !== '') {
+        params.push('--webhook')
+        params.push('--webhook_url')
+        params.push(req.body.webhook.trim())
+      }
       runCommand(params)
     }
 
