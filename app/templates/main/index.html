@@ -6,6 +6,11 @@
   {{#if svgObj.started}}
     <meta http-equiv="refresh" content="5">
   {{/if}}
+  <style>
+    .svg {
+      border: 1px solid #DDD
+    }
+  </style>
 </head>
 
 <body>
@@ -113,60 +118,67 @@
           </table>
         {{/if}}
 
-        <form action="/{{newDir}}{{svgfile}}" method="post">
+        <div class="columns">
+          <div class="column">
+            <form action="/{{newDir}}{{svgfile}}" method="post">
 
-          <div class="field is-grouped mt-5">
-            <div class="field is-horizontal">
-              <div class="field-label is-normal" style="flex-grow: unset;">
-                <label class="label" style="min-width: 80px">Webhook</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control is-expanded is-fullwidth">
-                    <input class="input" style="min-width: 600px;" type="text" name="webhook" value="{{svgObj.webhook}}">
+              <div class="field is-grouped mt-5">
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal" style="flex-grow: unset;">
+                    <label class="label" style="min-width: 80px">Webhook</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control is-expanded is-fullwidth">
+                        <input class="input" style="min-width: 600px;" type="text" name="webhook"
+                          value="{{svgObj.webhook}}">
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div class="field is-grouped mt-5">
-            <div class="field is-horizontal">
-              <div class="field-label is-normal" style="flex-grow: unset;">
-                <label class="label" style="min-width: 80px">Speed</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <input class="input" type="number" name="speed" value="{{svgObj.speed}}">
-                  </p>
+              <div class="field is-grouped mt-5">
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal" style="flex-grow: unset;">
+                    <label class="label" style="min-width: 80px">Speed</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <p class="control">
+                        <input class="input" type="number" name="speed" value="{{svgObj.speed}}">
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div class="field">
-            <label class="checkbox control">
-              <input type="checkbox" name="constSpeed" value="true" {{#if svgObj.constSpeed}}checked{{/if}}>
-              Constant speed
-            </label>
-          </div>
+              <div class="field">
+                <label class="checkbox control">
+                  <input type="checkbox" name="constSpeed" value="true" {{#if svgObj.constSpeed}}checked{{/if}}>
+                  Constant speed
+                </label>
+              </div>
 
-          <div class="field">
-            <label class="checkbox control">
-              <input type="checkbox" name="brushless" value="true" {{#if svgObj.brushless}}checked{{/if}}>
-              Brushless servo
-            </label>
-          </div>
+              <div class="field">
+                <label class="checkbox control">
+                  <input type="checkbox" name="brushless" value="true" {{#if svgObj.brushless}}checked{{/if}}>
+                  Brushless servo
+                </label>
+              </div>
 
-          <div class="field is-grouped">
-            <div class="control">
-              <button class="button is-link" name="action" value="preview">Preview</button>
-              {{#if svgObj.time}}<button class="button is-primary" name="action" value="plot">Plot</button>{{/if}}
-              <button class="button is-danger" name="action" value="delete">Delete</button>
-            </div>
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link" name="action" value="preview">Preview</button>
+                  {{#if svgObj.time}}<button class="button is-primary" name="action" value="plot">Plot</button>{{/if}}
+                  <button class="button is-danger" name="action" value="delete">Delete</button>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
+          <div class="column"><img class="svg" src="/svgs/{{newDir}}{{svgfile}}" alt="{{svgfile}}" /></div>
+        </div>
+
       </div>
     </section>
 

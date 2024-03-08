@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const main = require('./main')
+const svgs = require('./svgs')
 
 router.use(function (req, res, next) {
   req.templateValues = {}
@@ -19,6 +20,8 @@ router.post('/', main.index)
 router.get('/dir', main.dir)
 router.get('/:svgfile', main.index)
 router.post('/:svgfile', main.index)
+router.get('/svgs/:newDir/:svgfile', svgs.index)
+router.get('/svgs/:svgfile', svgs.index)
 router.get('/:newDir/:svgfile', main.index)
 router.post('/:newDir/:svgfile', main.index)
 
