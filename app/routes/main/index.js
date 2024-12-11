@@ -83,7 +83,7 @@ exports.index = async (req, res) => {
     }
 
     if (req.body.action === 'toggle50') {
-      await runCommand(['-m', 'utility', '--mode', 'toggle', '--penlift', '3', '--pen_pos_up', '50'])
+      await runCommand(['-m', 'utility', '--mode', 'toggle', '--penlift', '3'])
     }
 
     if (req.body.action === 'align') {
@@ -141,13 +141,18 @@ exports.index = async (req, res) => {
         params.push(process.env.MODEL)
         params.push('--report_time')
         params.push('--preview')
-        if (req.body.constSpeed) params.push('--const_speed')
-        if (req.body.brushless) params.push('--penlift')
-        if (req.body.brushless) params.push('3')
-        if (req.body.brushless) params.push('--pen_pos_up')
-        if (req.body.brushless) params.push('50')
-        params.push('-s')
-        params.push(req.body.speed)
+        // If we have const speed, then set that and use the speed
+        if (req.body.constSpeed) {
+          params.push('--handling')
+          params.push('4')
+          params.push('-s')
+          params.push(req.body.speed)
+        }
+        // If we have a brushless head (on an older axidraw) then set the penlift to 3
+        if (req.body.brushless) {
+          params.push('--penlift')
+          params.push('3')
+        }
         preview = await runCommand(params)
         const getTime = preview.replace('Estimated print time: ', '').split(' ')
         const times = getTime[0].split(':')
@@ -198,13 +203,18 @@ exports.index = async (req, res) => {
       params.push(file)
       params.push('--model')
       params.push(process.env.MODEL)
-      if (req.body.constSpeed) params.push('--const_speed')
-      if (req.body.brushless) params.push('--penlift')
-      if (req.body.brushless) params.push('3')
-      if (req.body.brushless) params.push('--pen_pos_up')
-      if (req.body.brushless) params.push('50')
-      params.push('-s')
-      params.push(req.body.speed)
+      // If we have const speed, then set that and use the speed
+      if (req.body.constSpeed) {
+        params.push('--handling')
+        params.push('4')
+        params.push('-s')
+        params.push(req.body.speed)
+      }
+      // If we have a brushless head (on an older axidraw) then set the penlift to 3
+      if (req.body.brushless) {
+        params.push('--penlift')
+        params.push('3')
+      }
       if (req.body.webhook.trim() !== '') {
         params.push('--webhook')
         params.push('--webhook_url')
