@@ -142,11 +142,13 @@ exports.index = async (req, res) => {
         params.push('--report_time')
         params.push('--preview')
         // If we have const speed, then set that and use the speed
+        params.push('--handling')
         if (req.body.constSpeed) {
-          params.push('--handling')
           params.push('4')
           params.push('-s')
           params.push(req.body.speed)
+        } else {
+          params.push('1')
         }
         // If we have a brushless head (on an older axidraw) then set the penlift to 3
         if (req.body.brushless) {
@@ -204,11 +206,13 @@ exports.index = async (req, res) => {
       params.push('--model')
       params.push(process.env.MODEL)
       // If we have const speed, then set that and use the speed
+      params.push('--handling')
       if (req.body.constSpeed) {
-        params.push('--handling')
         params.push('4')
         params.push('-s')
         params.push(req.body.speed)
+      } else {
+        params.push('1')
       }
       // If we have a brushless head (on an older axidraw) then set the penlift to 3
       if (req.body.brushless) {
