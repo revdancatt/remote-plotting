@@ -7,7 +7,7 @@ const fs = require('fs')
 function runCommand (args) {
   return new Promise(function (resolve, reject) {
     console.log('Running command: axicli ' + args.join(' '))
-    const s = spawn('axicli', args)
+    const s = spawn('nextdraw', args)
     s.stdout.on('data', (data) => {
       // console.log(`stdout: ${data}`)
       resolve(data.toString().trim())
@@ -79,19 +79,19 @@ exports.index = async (req, res) => {
 
   if (req.body.action) {
     if (req.body.action === 'toggle') {
-      await runCommand(['--mode', 'toggle'])
+      await runCommand(['-m', 'utility', '-M', 'toggle'])
     }
 
     if (req.body.action === 'toggle50') {
-      await runCommand(['--mode', 'toggle', '--penlift', '3', '--pen_pos_up', '50'])
+      await runCommand(['-m', 'utility', '--mode', 'toggle', '--penlift', '3', '--pen_pos_up', '50'])
     }
 
     if (req.body.action === 'align') {
-      await runCommand(['--mode', 'align'])
+      await runCommand(['-m', 'utility', '-M', 'disable_xy'])
     }
 
     if (req.body.action === 'walk_home') {
-      await runCommand(['--mode', 'manual', '--manual_cmd', 'walk_home'])
+      await runCommand(['-m', 'utility', '-M', 'walk_home'])
     }
 
     if (req.body.action === 'version') {
