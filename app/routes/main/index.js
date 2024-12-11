@@ -6,7 +6,7 @@ const fs = require('fs')
 
 function runCommand (args) {
   return new Promise(function (resolve, reject) {
-    console.log('Running command: axicli ' + args.join(' '))
+    console.log('Running command: nextdraw ' + args.join(' '))
     const s = spawn('nextdraw', args)
     s.stdout.on('data', (data) => {
       // console.log(`stdout: ${data}`)
