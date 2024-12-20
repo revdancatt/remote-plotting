@@ -7,7 +7,7 @@ It's a small web services that runs on the machine connected to the pen plotter,
 
 I run this on OSX running on a MacMini, which I then connect to from my laptop or phone to control, it's ***very*** untested on PC.
 
-![UI](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/ui.png?token=GHSAT0AAAAAACBGWLNWNW7IITEBH6QPZKOKZB6SOFQ)
+![UI](./README-imgs/ui.png)
 
 ----
 
@@ -77,11 +77,11 @@ Or, just leave it empty, totally up to you.
 
 This is a personal project, it's not supposed to be a foolproof webserver out there on the internet, there's like a million ways to screw this up, with that said, here's what you can do with it...
 
-![breadcrumb trail](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/breadcrumb.png?token=GHSAT0AAAAAACBGWLNX7YQIZUHXQJ5BNGQIZB6QVTQ)
+![breadcrumb trail](./README-imgs/breadcrumb.png)
 
 In the breadcrumb navigation `Home` will return you to the default SVG folder. Clicking `Select Directory` will give you a sub-directory list, pick one to drill down, click the breadcrumb to move back up. The UI will generally only display .svg files. (The ability to create new directories remotely has been removed from this version).
 
-![Buttons](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/buttons.png?token=GHSAT0AAAAAACBGWLNW4CX4K7CMSQM5VSTCZB6QNUA)
+![Buttons](./README-imgs/buttons.png)
 
 `Sysinfo` & `Version` - will both show various bits of system information.
 
@@ -97,7 +97,7 @@ In the breadcrumb navigation `Home` will return you to the default SVG folder. C
 
 When you upload a file the UI will look something like this...
 
-![Preview mode](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/preview.png?token=GHSAT0AAAAAACBGWLNWY3Z4N4MDWRX6B3HIZB6Q25Q)
+![Preview mode](./README-imgs/preview.png)
 
 If you've set a `WEBHOOK` in the `.env` file it'll show here, otherwise you can just add one if you want to (I generally don't, I'm only showing here as an example).
 
@@ -113,7 +113,7 @@ If you've set a `WEBHOOK` in the `.env` file it'll show here, otherwise you can 
 
 Once you've hit `Preview` you'll get something like this...
 
-![Final view](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/final.png?token=GHSAT0AAAAAACBGWLNWXLZCUZ5IT46GE5NSZB6RE5A)
+![Final view](./README-imgs/final.png)
 
 This will tell you how long it thinks to plot will take, the distance so we can all write those fancy descriptions on Instagram (you're welcome) and the time it thinks it'll finish. There is a chance this could be out a few minutes on a long plot.
 
@@ -121,7 +121,7 @@ The **Webhook** however will be fired by the axicli software itself not this ser
 
 `Plot` - will start the plot - again if it's complicated this may take a couple of minutes to start.
 
-![Progress](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/progress.png?token=GHSAT0AAAAAACBGWLNWFRSGMM6LJJW67F5EZB6RJUQ)
+![Progress](./README-imgs/progress.png)
 
 When the plot starts you'll see a progress bar, remaining time and end time.
 
