@@ -3,3 +3,7 @@
 /.env
 /remote-plotting.zip
 .DS_Store
+/data/machine-state.json
+/plans
+/remote-plotting.code-workspace
+/docs

@@ -1,0 +1,144 @@
+<article class="machine-panel" title="Click background to select this machine for SVG assignment" data-machine-id="{{id}}" data-status="{{status}}">
+  <header class="machine-panel-header">
+    <div>
+      <h3>{{displayName}}</h3>
+      <p class="machine-meta">{{port}}</p>
+    </div>
+    <div class="machine-badges">
+      <span class="badge badge-status" data-status="{{status}}">{{status}}</span>
+      <span class="badge badge-model">{{#if isVirtual}}virtual{{else}}{{modelLabel options.model}}{{/if}}</span>
+    </div>
+  </header>
+
+  <section class="machine-rename" data-role="rename-section">
+    <form class="rename-form" data-role="rename-form">
+      <input type="text" name="displayName" value="{{displayName}}" required>
+      <button class="button button-small" type="submit">Rename</button>
+    </form>
+  </section>
+
+  <section class="machine-svg-preview" data-role="machine-svg-preview">
+    <div class="machine-svg-preview-inner hidden" data-role="svg-preview-inner">
+      <div class="machine-svg-preview-paper">
+        <img data-role="svg-preview-img" src="" alt="">
+      </div>
+      <p class="machine-svg-preview-caption" data-role="svg-preview-caption"></p>
+    </div>
+  </section>
+
+  {{#unless isVirtual}}
+  <section class="machine-actions" data-role="machine-actions">
+    <div class="command-row">
+      <button class="button button-ghost button-small" type="button" data-command="toggle">Toggle</button>
+      <button class="button button-ghost button-small" type="button" data-command="align">Align</button>
+      <button class="button button-ghost button-small" type="button" data-command="walk_home">Home</button>
+      <button class="button button-ghost button-small" type="button" data-command="sysinfo">Sysinfo</button>
+      <button class="button button-ghost button-small" type="button" data-command="version">Version</button>
+    </div>
+  </section>
+  {{/unless}}
+
+  <hr class="section-divider">
+
+  <section class="plot-config" data-role="plot-config">
+    <div class="field-grid">
+      <label>
+        <span>Speed</span>
+        <input type="number" min="1" max="100" name="speed" value="{{options.speed}}">
+      </label>
+      <label>
+        <span>Handling</span>
+        <select name="handling">
+          <option value="1" {{#ifEq options.handling 1}}selected{{/ifEq}}>Technical</option>
+          <option value="2" {{#ifEq options.handling 2}}selected{{/ifEq}}>Handwriting</option>
+          <option value="3" {{#ifEq options.handling 3}}selected{{/ifEq}}>Sketching</option>
+          <option value="4" {{#ifEq options.handling 4}}selected{{/ifEq}}>Constant</option>
+        </select>
+      </label>
+      <label>
+        <span>Reordering</span>
+        <select name="reordering">
+          <option value="0" {{#ifEq options.reordering 0}}selected{{/ifEq}}>Least</option>
+          <option value="1" {{#ifEq options.reordering 1}}selected{{/ifEq}}>Basic</option>
+          <option value="2" {{#ifEq options.reordering 2}}selected{{/ifEq}}>Full</option>
+          <option value="4" {{#ifEq options.reordering 4}}selected{{/ifEq}}>None</option>
+        </select>
+      </label>
+      <label>
+        <span>Penlift</span>
+        <select name="penlift">
+          <option value="1" {{#ifEq options.penlift 1}}selected{{/ifEq}}>Default</option>
+          <option value="2" {{#ifEq options.penlift 2}}selected{{/ifEq}}>Reserved</option>
+          <option value="3" {{#ifEq options.penlift 3}}selected{{/ifEq}}>Brushless</option>
+        </select>
+      </label>
+      <label>
+        <span>Model</span>
+        <select name="model">
+          {{#each modelOptions}}
+            <option value="{{value}}" {{#ifEq ../options.model value}}selected{{/ifEq}}>{{label}}</option>
+          {{/each}}
+        </select>
+      </label>
+      <label class="full-width">
+        <span>Webhook URL</span>
+        <input type="text" name="webhook" value="{{options.webhook}}" placeholder="https://example.com">
+      </label>
+      <label class="checkbox-row">
+        <input type="checkbox" name="randomStart" {{#if options.randomStart}}checked{{/if}}>
+        <span>Random start</span>
+      </label>
+      <label class="checkbox-row">
+        <input type="checkbox" name="hiding" {{#if options.hiding}}checked{{/if}}>
+        <span>Hidden-line removal</span>
+      </label>
+    </div>
+  </section>
+
+  {{#if preview}}
+  <section class="preview-stats" data-role="preview-stats">
+    <div class="stat-item">
+      <span class="stat-label">Estimate</span>
+      <span class="stat-value">{{preview.timeEstimate}}s</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Pen-down</span>
+      <span class="stat-value">{{preview.distancePenDown}}m</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Total dist</span>
+      <span class="stat-value">{{preview.distanceTotal}}m</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Pen lifts</span>
+      <span class="stat-value">{{preview.penLifts}}</span>
+    </div>
+  </section>
+  {{/if}}
+
+  <section class="plot-controls" data-role="plot-controls">
+    <button class="button button-primary" type="button" data-action="preview">Preview</button>
+    <button class="button button-accent" type="button" data-action="plot">Plot</button>
+  </section>
+
+  <section class="glanceable-progress" data-role="glanceable-progress">
+    <div class="plot-progress-shell">
+      <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="progress-ring-bg" cx="60" cy="60" r="52"></circle>
+        <circle class="progress-ring-fg" cx="60" cy="60" r="52"></circle>
+      </svg>
+      <div class="progress-center">
+        <div class="progress-percent">0%</div>
+        <div class="progress-caption">progress</div>
+      </div>
+    </div>
+    <div class="countdown-block">
+      <div class="countdown-time">00:00:00</div>
+      <div class="countdown-label">remaining</div>
+    </div>
+    <div class="glanceable-meta">
+      <div data-role="done-at">Done at --:--</div>
+      <div data-role="active-file">{{#if currentFile}}{{currentFile}}{{/if}}</div>
+    </div>
+  </section>
+</article>

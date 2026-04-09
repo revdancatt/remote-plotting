@@ -1,0 +1,697 @@
+/* Extended theme gradients — half of 20 extended palettes (animated body, headers, panel depth, gradient buttons) */
+
+@keyframes themeGradShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ─── Ocean ─── */
+
+[data-theme='ocean'] body {
+  background: linear-gradient(125deg, #020617, #0c4a6e, #164e63, #0a1628, #082f49);
+  background-size: 400% 400%;
+  animation: themeGradShift 18s ease infinite;
+}
+
+[data-theme='ocean'] h1,
+[data-theme='ocean'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='ocean'] .panel,
+[data-theme='ocean'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--bg-elevated) 92%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 80%, transparent);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(56, 189, 248, 0.06);
+}
+
+[data-theme='ocean'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(56, 189, 248, 0.45),
+    rgba(34, 211, 238, 0.45),
+    transparent
+  );
+}
+
+[data-theme='ocean'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='ocean'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='ocean'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Sunrise ─── */
+
+[data-theme='sunrise'] body {
+  background: linear-gradient(130deg, #fff8f3, #ffedd5, #fed7aa, #fdba74, #fff8f3);
+  background-size: 400% 400%;
+  animation: themeGradShift 20s ease infinite;
+}
+
+[data-theme='sunrise'] h1,
+[data-theme='sunrise'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='sunrise'] .panel,
+[data-theme='sunrise'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--surface) 88%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 75%, var(--bg));
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+[data-theme='sunrise'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(234, 88, 12, 0.35),
+    rgba(245, 158, 11, 0.4),
+    transparent
+  );
+}
+
+[data-theme='sunrise'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='sunrise'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 72%, var(--accent)));
+  border: none;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--primary) 22%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='sunrise'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 72%, var(--primary)));
+  border: none;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Midnight ─── */
+
+[data-theme='midnight'] body {
+  background: linear-gradient(128deg, #020617, #1e1b4b, #312e81, #0f172a, #030712);
+  background-size: 400% 400%;
+  animation: themeGradShift 22s ease infinite;
+}
+
+[data-theme='midnight'] h1,
+[data-theme='midnight'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='midnight'] .panel,
+[data-theme='midnight'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--bg-elevated) 90%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 85%, #000);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(129, 140, 248, 0.08);
+}
+
+[data-theme='midnight'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(129, 140, 248, 0.4),
+    rgba(167, 139, 250, 0.35),
+    transparent
+  );
+}
+
+[data-theme='midnight'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='midnight'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 68%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 30%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='midnight'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 68%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Synthwave ─── */
+
+[data-theme='synthwave'] body {
+  background: linear-gradient(132deg, #1a0a2e, #4c1d95, #831843, #0e7490, #1a0a2e);
+  background-size: 400% 400%;
+  animation: themeGradShift 16s ease infinite;
+}
+
+[data-theme='synthwave'] h1,
+[data-theme='synthwave'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='synthwave'] .panel,
+[data-theme='synthwave'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--bg-elevated) 88%, #000) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 70%, transparent);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(244, 114, 182, 0.12);
+}
+
+[data-theme='synthwave'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 114, 182, 0.5),
+    rgba(34, 211, 238, 0.45),
+    transparent
+  );
+}
+
+[data-theme='synthwave'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='synthwave'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 65%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 22px color-mix(in srgb, var(--primary) 32%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='synthwave'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 65%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Neon noir ─── */
+
+[data-theme='neon-noir'] body {
+  background: linear-gradient(125deg, #050505, #171717, #450a0a, #0c4a6e, #050505);
+  background-size: 400% 400%;
+  animation: themeGradShift 15s ease infinite;
+}
+
+[data-theme='neon-noir'] h1,
+[data-theme='neon-noir'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='neon-noir'] .panel,
+[data-theme='neon-noir'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--surface) 94%, #000) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 80%, #000);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(0, 245, 255, 0.06);
+}
+
+[data-theme='neon-noir'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 0, 170, 0.55),
+    rgba(0, 245, 255, 0.5),
+    transparent
+  );
+}
+
+[data-theme='neon-noir'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='neon-noir'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 60%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--primary) 35%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='neon-noir'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 32%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Desert ─── */
+
+[data-theme='desert'] body {
+  background: linear-gradient(130deg, #faf5eb, #f0e6d4, #e8c4a0, #fdba74, #faf5eb);
+  background-size: 400% 400%;
+  animation: themeGradShift 24s ease infinite;
+}
+
+[data-theme='desert'] h1,
+[data-theme='desert'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='desert'] .panel,
+[data-theme='desert'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--surface) 90%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 85%, var(--bg));
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+[data-theme='desert'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(194, 65, 12, 0.35),
+    rgba(217, 119, 6, 0.38),
+    transparent
+  );
+}
+
+[data-theme='desert'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='desert'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 72%, var(--accent)));
+  border: none;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--primary) 24%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='desert'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 72%, var(--primary)));
+  border: none;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--accent) 24%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Botanical ─── */
+
+[data-theme='botanical'] body {
+  background: linear-gradient(128deg, #f0fdf4, #dcfce7, #bbf7d0, #86efac, #f0fdf4);
+  background-size: 400% 400%;
+  animation: themeGradShift 26s ease infinite;
+}
+
+[data-theme='botanical'] h1,
+[data-theme='botanical'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='botanical'] .panel,
+[data-theme='botanical'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--surface) 92%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 70%, var(--bg));
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+[data-theme='botanical'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(22, 163, 74, 0.4),
+    rgba(74, 222, 128, 0.4),
+    transparent
+  );
+}
+
+[data-theme='botanical'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='botanical'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 72%, var(--accent)));
+  border: none;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--primary) 22%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='botanical'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 72%, var(--primary)));
+  border: none;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Pastel ─── */
+
+[data-theme='pastel'] body {
+  background: linear-gradient(127deg, #faf5ff, #f3e8ff, #e9d5ff, #ddd6fe, #faf5ff);
+  background-size: 400% 400%;
+  animation: themeGradShift 23s ease infinite;
+}
+
+[data-theme='pastel'] h1,
+[data-theme='pastel'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='pastel'] .panel,
+[data-theme='pastel'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--surface) 94%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 85%, #fff);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+[data-theme='pastel'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167, 139, 250, 0.45),
+    rgba(196, 181, 253, 0.45),
+    transparent
+  );
+}
+
+[data-theme='pastel'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='pastel'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 75%, var(--accent)));
+  border: none;
+  box-shadow: 0 2px 16px color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='pastel'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 75%, var(--primary)));
+  border: none;
+  box-shadow: 0 2px 16px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Blueprint ─── */
+
+[data-theme='blueprint'] body {
+  background: linear-gradient(126deg, #0f172a, #172554, #1e3a8a, #0c4a6e, #172554);
+  background-size: 400% 400%;
+  animation: themeGradShift 19s ease infinite;
+}
+
+[data-theme='blueprint'] h1,
+[data-theme='blueprint'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='blueprint'] .panel,
+[data-theme='blueprint'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--surface) 92%, #000) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 75%, #000);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(147, 197, 253, 0.1);
+}
+
+[data-theme='blueprint'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(147, 197, 253, 0.45),
+    rgba(56, 189, 248, 0.45),
+    transparent
+  );
+}
+
+[data-theme='blueprint'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='blueprint'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='blueprint'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--on-accent);
+}
+
+/* ─── Studio ─── */
+
+[data-theme='studio'] body {
+  background: linear-gradient(127deg, #09090b, #18181b, #4c1d95, #115e59, #18181b);
+  background-size: 400% 400%;
+  animation: themeGradShift 21s ease infinite;
+}
+
+[data-theme='studio'] h1,
+[data-theme='studio'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='studio'] .panel,
+[data-theme='studio'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--bg-elevated) 90%, var(--bg)) 100%
+  );
+  border-color: color-mix(in srgb, var(--border) 88%, #000);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(167, 139, 250, 0.1);
+}
+
+[data-theme='studio'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167, 139, 250, 0.45),
+    rgba(45, 212, 191, 0.45),
+    transparent
+  );
+}
+
+[data-theme='studio'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='studio'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 68%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 30%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='studio'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 68%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--on-accent);
+}
+
+/* Positioning for gradient accent line on machine panels */
+[data-theme='ocean'] .machine-panel,
+[data-theme='sunrise'] .machine-panel,
+[data-theme='midnight'] .machine-panel,
+[data-theme='synthwave'] .machine-panel,
+[data-theme='neon-noir'] .machine-panel,
+[data-theme='desert'] .machine-panel,
+[data-theme='botanical'] .machine-panel,
+[data-theme='pastel'] .machine-panel,
+[data-theme='blueprint'] .machine-panel,
+[data-theme='studio'] .machine-panel {
+  position: relative;
+}

@@ -1,28 +1,24 @@
-const express = require('express')
-const router = express.Router()
+import express from 'express'
+import { createPagesRouter } from './pages.js'
+import { createMachinesApiRouter } from './api/machines.js'
+import { createFilesApiRouter } from './api/files.js'
+import { createPlotsApiRouter } from './api/plots.js'
 
-const main = require('./main')
-const svgs = require('./svgs')
+export function createRouter ({ io, fileManager, machineManager }) {
+  const router = express.Router()
 
-router.use(function (req, res, next) {
-  req.templateValues = {}
+  router.use((req, res, next) => {
+    res.locals.pageTitle = 'MVPT v2'
+    next()
+  })
 
-  const d = new Date()
-  req.templateValues.today = {
-    day: d.getDate(),
-    month: d.getMonth() + 1
-  }
-  next()
-})
+  router.use('/', createPagesRouter({
+    fileManager,
+    machineManager
+  }))
+  router.use('/api/machines', createMachinesApiRouter({ machineManager }))
+  router.use('/api/files', createFilesApiRouter({ fileManager }))
+  router.use('/api/plots', createPlotsApiRouter({ machineManager, io }))
 
-router.get('/', main.index)
-router.post('/', main.index)
-router.get('/dir', main.dir)
-router.get('/:svgfile', main.index)
-router.post('/:svgfile', main.index)
-router.get('/svgs/:newDir/:svgfile', svgs.index)
-router.get('/svgs/:svgfile', svgs.index)
-router.get('/:newDir/:svgfile', main.index)
-router.post('/:newDir/:svgfile', main.index)
-
-module.exports = router
+  return router
+}

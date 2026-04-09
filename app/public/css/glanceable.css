@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════
+   Glanceable Progress Mode
+   ═══════════════════════════════════════════════ */
+
+.glanceable-progress {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(0, 0, 0, 0.03), transparent);
+  transition: background-color var(--transition-base);
+}
+
+[data-theme='dark'] .glanceable-progress {
+  background: linear-gradient(160deg, rgba(0, 0, 0, 0.15), transparent);
+}
+
+[data-theme='party'] .glanceable-progress {
+  background: linear-gradient(160deg, rgba(255, 72, 216, 0.12), rgba(25, 18, 55, 0.85));
+}
+
+/* ─── Progress ring (scaled up for glanceable) ─── */
+
+.plot-progress-shell {
+  position: relative;
+  width: 240px;
+  height: 240px;
+}
+
+.progress-ring {
+  width: 240px;
+  height: 240px;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: transparent;
+  stroke: var(--surface);
+  stroke-width: 8;
+  transition: stroke var(--transition-base);
+}
+
+.progress-ring-fg {
+  fill: transparent;
+  stroke: var(--accent);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 327;
+  stroke-dashoffset: 327;
+  transition: stroke-dashoffset var(--transition-slow);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 40%, transparent));
+}
+
+/* Party: keep accent stroke + glow, no cycling rainbow */
+[data-theme='party'] .progress-ring-fg {
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 45%, transparent));
+}
+
+.progress-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.progress-percent {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.progress-caption {
+  color: var(--muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: -2px;
+}
+
+/* ─── Countdown ─── */
+
+.countdown-block {
+  text-align: center;
+}
+
+.countdown-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+[data-theme='party'] .countdown-time {
+  text-shadow:
+    0 0 10px rgba(61, 255, 234, 0.4),
+    0 0 30px rgba(255, 72, 216, 0.2);
+}
+
+.countdown-label {
+  color: var(--muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: var(--space-1);
+}
+
+/* ─── Glanceable meta ─── */
+
+.glanceable-meta {
+  width: 100%;
+  display: grid;
+  gap: var(--space-1);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+/* ─── Animated border on plotting panels ─── */
+
+.machine-panel[data-status='plotting'] {
+  position: relative;
+  overflow: hidden;
+}
+
+.machine-panel[data-status='plotting']::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-lg);
+  background: conic-gradient(
+    from 0deg,
+    var(--accent),
+    var(--primary),
+    var(--accent),
+    var(--primary),
+    var(--accent)
+  );
+  animation: borderRotate 3s linear infinite;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* Party: skip rotating conic border — it bleeds through the ring center and reads as a pale rainbow */
+[data-theme='party'] .machine-panel[data-status='plotting']::before {
+  display: none;
+}
+
+@keyframes borderRotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Ensure the panel content covers the animated border */
+.machine-panel[data-status='plotting'] > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Panel takeover: when plotting, only show header + glanceable ─── */
+
+.machine-panel[data-status='plotting'] {
+  background: var(--bg-elevated);
+}
+
+.machine-panel[data-status='plotting'] .machine-panel-header {
+  justify-content: center;
+  text-align: center;
+}
+
+.machine-panel[data-status='plotting'] .machine-panel-header h3 {
+  font-size: var(--text-2xl);
+}
+
+/* Pulse shadow effect while plotting */
+.machine-panel[data-status='plotting'] {
+  animation: plotPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes plotPulse {
+  0%, 100% {
+    box-shadow: var(--shadow), 0 0 0 1px var(--accent), 0 0 20px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+  50% {
+    box-shadow: var(--shadow), 0 0 0 1px var(--accent), 0 0 40px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+}
+
+[data-theme='party'] .machine-panel[data-status='plotting'] {
+  animation: plotPulseParty 2s ease-in-out infinite;
+}
+
+@keyframes plotPulseParty {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 72, 216, 0.2), 0 0 40px rgba(61, 255, 234, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 72, 216, 0.35), 0 0 60px rgba(61, 255, 234, 0.2);
+  }
+}

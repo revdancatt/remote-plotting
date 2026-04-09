@@ -1,11 +1,14 @@
 {
   "name": "remote-plotting",
-  "version": "1.0.0",
-  "description": "To remotely control the plotter",
+  "version": "2.0.0",
+  "description": "Multi-machine remote plotting dashboard for AxiDraw and NextDraw",
   "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "dev": "DOTENV_CONFIG_QUIET=true nodemon server.js",
+    "start": "node server.js",
+    "lint": "standard",
+    "test": "echo \"No tests configured yet\""
   },
   "repository": {
     "type": "git",
@@ -17,16 +20,18 @@
     "url": "https://github.com/revdancatt/remote-plotting/issues"
   },
   "homepage": "https://github.com/revdancatt/remote-plotting#readme",
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
-    "standard": "^17.0.0"
+    "nodemon": "^3.1.10",
+    "standard": "^17.1.2"
   },
   "dependencies": {
-    "await-spawn": "^4.0.2",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "express-fileupload": "^1.4.0",
-    "express-handlebars": "^6.0.6",
-    "gradient-string": "^2.0.1",
-    "moment": "^2.29.3"
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.1",
+    "multer": "^2.0.2",
+    "socket.io": "^4.8.1"
   }
 }

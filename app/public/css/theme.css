@@ -1,0 +1,355 @@
+:root {
+  /* ─── Type scale ─── */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  /* ─── Spacing ─── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  /* ─── Radii ─── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* ─── Light palette (default) ─── */
+  --bg: #f4f6f9;
+  --bg-elevated: #ffffff;
+  --surface: #e9edf3;
+  --surface-hover: #dde3eb;
+  --text: #141b2e;
+  --text-secondary: #44506b;
+  --muted: #6b7a99;
+  --primary: #3455ff;
+  --primary-soft: rgba(52, 85, 255, 0.1);
+  --accent: #07b5a0;
+  --accent-soft: rgba(7, 181, 160, 0.1);
+  --success: #10b981;
+  --success-soft: rgba(16, 185, 129, 0.1);
+  --warning: #f59e0b;
+  --warning-soft: rgba(245, 158, 11, 0.1);
+  --danger: #d94a5d;
+  --danger-soft: rgba(217, 74, 93, 0.1);
+  --border: #d4dae6;
+  --border-subtle: #e7ecf3;
+  --shadow-sm: 0 1px 3px rgba(20, 34, 61, 0.04);
+  --shadow: 0 4px 16px rgba(20, 34, 61, 0.06);
+  --shadow-lg: 0 10px 30px rgba(20, 34, 61, 0.1);
+
+  /* Text on filled primary / accent buttons (WCAG-friendly vs --primary / --accent) */
+  --on-primary: #ffffff;
+  --on-accent: #0b1f1d;
+
+  /* ─── Transition ─── */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 350ms ease;
+}
+
+/* Explicit light (when user picks Light from the theme dropdown) */
+[data-theme='light'] {
+  --bg: #f4f6f9;
+  --bg-elevated: #ffffff;
+  --surface: #e9edf3;
+  --surface-hover: #dde3eb;
+  --text: #141b2e;
+  --text-secondary: #44506b;
+  --muted: #6b7a99;
+  --primary: #3455ff;
+  --primary-soft: rgba(52, 85, 255, 0.1);
+  --accent: #07b5a0;
+  --accent-soft: rgba(7, 181, 160, 0.1);
+  --success: #10b981;
+  --success-soft: rgba(16, 185, 129, 0.1);
+  --warning: #f59e0b;
+  --warning-soft: rgba(245, 158, 11, 0.1);
+  --danger: #d94a5d;
+  --danger-soft: rgba(217, 74, 93, 0.1);
+  --border: #d4dae6;
+  --border-subtle: #e7ecf3;
+  --shadow-sm: 0 1px 3px rgba(20, 34, 61, 0.04);
+  --shadow: 0 4px 16px rgba(20, 34, 61, 0.06);
+  --shadow-lg: 0 10px 30px rgba(20, 34, 61, 0.1);
+  --on-primary: #ffffff;
+  --on-accent: #0b1f1d;
+}
+
+/* ─── Dark ─── */
+[data-theme='dark'] {
+  --bg: #0e1220;
+  --bg-elevated: #171d30;
+  --surface: #1e2740;
+  --surface-hover: #283352;
+  --text: #e5ebf8;
+  --text-secondary: #a3b3d1;
+  --muted: #7b8fb4;
+  --primary: #6b88ff;
+  --primary-soft: rgba(107, 136, 255, 0.12);
+  --accent: #00d8bd;
+  --accent-soft: rgba(0, 216, 189, 0.12);
+  --success: #34d399;
+  --success-soft: rgba(52, 211, 153, 0.1);
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.1);
+  --danger: #ff7f96;
+  --danger-soft: rgba(255, 127, 150, 0.12);
+  --border: #2a3654;
+  --border-subtle: #222d47;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 35px rgba(0, 0, 0, 0.35);
+  --on-primary: #ffffff;
+  --on-accent: #0a1620;
+}
+
+/* ─── Party ─── */
+[data-theme='party'] {
+  --bg: #0d0118;
+  --bg-elevated: rgba(22, 10, 50, 0.9);
+  --surface: rgba(50, 15, 75, 0.7);
+  --surface-hover: rgba(65, 20, 95, 0.8);
+  --text: #f6f0ff;
+  --text-secondary: #d4c6f0;
+  --muted: #b9a5e0;
+  --primary: #ff48d8;
+  --primary-soft: rgba(255, 72, 216, 0.15);
+  --accent: #3dffea;
+  --accent-soft: rgba(61, 255, 234, 0.12);
+  --success: #3dffea;
+  --success-soft: rgba(61, 255, 234, 0.1);
+  --warning: #ffcc3d;
+  --warning-soft: rgba(255, 204, 61, 0.1);
+  --danger: #ff6b3d;
+  --danger-soft: rgba(255, 107, 61, 0.1);
+  --border: rgba(255, 255, 255, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --shadow-sm: 0 1px 4px rgba(255, 72, 216, 0.08);
+  --shadow: 0 0 25px rgba(255, 72, 216, 0.15);
+  --shadow-lg: 0 0 40px rgba(255, 72, 216, 0.25);
+  --on-primary: #ffffff;
+  --on-accent: #0d0118;
+}
+
+[data-theme='party'] body {
+  background: linear-gradient(135deg, #1a053a, #0a1e5c, #200f4d, #0d0118);
+  background-size: 400% 400%;
+  animation: partyBg 14s ease infinite;
+}
+
+@keyframes partyBg {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ─── Base reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  height: 100%;
+  overflow: hidden;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.55;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+::selection {
+  background: var(--primary);
+  color: #fff;
+}
+
+[data-theme='party'] ::selection {
+  background: var(--accent);
+  color: #0d0118;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--text-2xl); font-weight: 700; }
+h2 { font-size: var(--text-xl); font-weight: 600; }
+h3 { font-size: var(--text-lg); font-weight: 600; }
+
+p {
+  margin: 0;
+}
+
+code, .font-mono {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ─── Theme toggle button ─── */
+
+.theme-icon {
+  display: inline-block;
+  transition: transform var(--transition-base);
+}
+
+.theme-switching .theme-icon {
+  animation: themeIconSpin 300ms ease;
+}
+
+@keyframes themeIconSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.3); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* ─── Dark mode depth ─── */
+
+[data-theme='dark'] .panel,
+[data-theme='dark'] .machine-panel {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated) 0%,
+    color-mix(in srgb, var(--bg-elevated) 92%, var(--bg)) 100%
+  );
+}
+
+[data-theme='dark'] .app-header {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated),
+    color-mix(in srgb, var(--bg-elevated) 95%, var(--bg))
+  );
+}
+
+/* ─── Party mode effects ─── */
+
+[data-theme='party'] h1,
+[data-theme='party'] h2 {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme='party'] .panel,
+[data-theme='party'] .machine-panel {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='party'] .machine-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 72, 216, 0.4), rgba(61, 255, 234, 0.4), transparent);
+}
+
+/* Party sparkle on the header */
+[data-theme='party'] .app-header {
+  border-bottom-color: transparent;
+  background:
+    linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+    linear-gradient(90deg, var(--primary), var(--accent));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border-bottom: 1px solid transparent;
+}
+
+[data-theme='party'] .button-primary {
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, var(--accent)));
+  border: none;
+  box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 30%, transparent);
+  color: var(--on-primary);
+}
+
+[data-theme='party'] .button-accent {
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--primary)));
+  border: none;
+  box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--on-accent);
+}
+
+/* Smooth transitions on everything for theme switching */
+.panel,
+.machine-panel,
+.app-header,
+.button,
+.badge,
+input,
+select,
+textarea,
+.files-list li,
+.file-browser-footer,
+.breadcrumb,
+.upload-zone {
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+/* Error / static pages: allow scroll when not using dashboard shell */
+html:has(.simple-state-page) {
+  height: auto;
+  overflow: auto;
+}
+
+html:has(.simple-state-page) body {
+  height: auto;
+  overflow: auto;
+}

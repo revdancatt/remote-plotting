@@ -1,0 +1,14 @@
+{
+  "watch": [
+    "server.js",
+    "app/routes",
+    "app/services",
+    "app/helpers"
+  ],
+  "ext": "js",
+  "ignore": [
+    "app/templates",
+    "app/public",
+    "python"
+  ]
+}

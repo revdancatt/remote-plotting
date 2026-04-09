@@ -1,0 +1,77 @@
+<section class="panel panel-file-browser" id="file-browser-panel">
+  <div class="panel-header panel-header--tight">
+    <h2>SVG Library</h2>
+    <div class="panel-header-actions">
+      <button class="button button-ghost button-small" type="button" data-action="refresh-files" title="Refresh">&#8635;</button>
+      <button class="button button-ghost button-small sidebar-collapse-btn" type="button" data-action="toggle-sidebar" title="Collapse sidebar">&#9666;</button>
+    </div>
+  </div>
+
+  <div class="sidebar-body">
+    <div class="breadcrumb breadcrumb--tight" id="file-breadcrumb" data-current-dir="{{files.currentDir}}">
+      <button class="button-link" type="button" data-dir-path="">Home</button>
+      {{#if files.currentDir}}
+        <span class="breadcrumb-separator">/</span>
+        <span>{{files.currentDir}}</span>
+      {{/if}}
+    </div>
+
+    <div class="directory-controls directory-controls--compact">
+      <form id="mkdir-form" class="inline-form">
+        <input type="text" name="name" placeholder="New folder…" required>
+        <button class="button button-small" type="submit">Create</button>
+      </form>
+      <form id="upload-form" enctype="multipart/form-data">
+        <div class="upload-zone upload-zone--compact" id="upload-zone">
+          <div class="upload-zone-label">
+            <span class="upload-zone-icon">&#8682;</span>
+            <span>Drop SVG or click</span>
+          </div>
+          <input type="file" name="file" accept=".svg" required>
+        </div>
+      </form>
+    </div>
+
+    <div class="file-browser-scroll" id="file-browser-scroll">
+      <div class="files-list-wrapper">
+        <h3>Directories</h3>
+        <ul id="directory-list" class="files-list">
+          {{#if files.parentDir}}
+            <li>
+              <button class="button-link" type="button" data-dir-path="{{files.parentDir}}">..</button>
+            </li>
+          {{/if}}
+          {{#each files.directories}}
+            <li>
+              <button class="button-link" type="button" data-dir-path="{{relativePath}}">&#128193; {{name}}</button>
+            </li>
+          {{/each}}
+        </ul>
+        <div class="empty-state hidden" id="dirs-empty">No subfolders</div>
+      </div>
+
+      <div class="files-list-wrapper">
+        <h3>SVG Files</h3>
+        <ul id="svg-list" class="files-list selectable-list">
+          {{#each files.files}}
+            <li>
+              <button class="button-link file-select-button" type="button" data-file-path="{{relativePath}}">{{name}}</button>
+              <button class="button-icon danger" type="button" title="Delete file" data-delete-path="{{relativePath}}">&times;</button>
+            </li>
+          {{/each}}
+        </ul>
+        <div class="empty-state hidden" id="svg-empty">No SVG files in this directory</div>
+      </div>
+    </div>
+
+    <div class="file-browser-footer">
+      <div class="file-browser-footer-row">
+        <span class="file-browser-target-label">Assign to</span>
+        <span class="file-browser-target-name" id="file-browser-target-name" title="Click a machine to choose">—</span>
+      </div>
+      <div class="file-browser-footer-row file-browser-footer-row--file">
+        <span class="selected-file-name" id="selected-file-name">No file for this machine</span>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{> head}}
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>MVPT v2</h1>
+        <p>Multi-Machine Plotter Dashboard</p>
+      </div>
+      <div class="header-actions">
+        <span class="machine-count"><strong id="machine-count">{{machines.length}}</strong> machine(s)</span>
+        <button id="discover-machines" class="button button-small">Discover</button>
+        <button id="plot-all" class="button button-primary button-small">Plot All</button>
+        <label class="theme-select-label">
+          <span class="sr-only">Theme</span>
+          <select id="theme-select" class="theme-select" title="Theme"></select>
+        </label>
+      </div>
+    </header>
+
+    <main class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        {{> fileBrowser}}
+      </aside>
+
+      <section class="dashboard-main">
+        <div id="machine-grid" class="machine-grid">
+          {{#each machines}}
+            {{> machinePanel modelOptions=../modelOptions}}
+          {{/each}}
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-relevant="additions"></div>
+
+  <script>
+    window.__MVPT_INITIAL_STATE__ = {{{initialState}}}
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
