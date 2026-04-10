@@ -80,9 +80,7 @@ function commandRow (machine) {
   if (machine.isVirtual) return ''
   return `
     <div class="command-row">
-      <button class="button button-ghost button-small" type="button" data-command="toggle">Toggle</button>
       <button class="button button-ghost button-small" type="button" data-command="align">Align</button>
-      <button class="button button-ghost button-small" type="button" data-command="walk_home">Home</button>
       <button class="button button-ghost button-small" type="button" data-command="sysinfo">Sysinfo</button>
       <button class="button button-ghost button-small" type="button" data-command="version">Version</button>
     </div>`
@@ -155,6 +153,13 @@ function configSection (machine) {
             ).join('')}
           </select>
         </label>
+        <div class="plot-config-command-cell" role="group" aria-label="Quick machine commands">
+          <span class="plot-config-field-heading">Pen</span>
+          <div class="plot-config-command-buttons">
+            <button class="button button-small" type="button" data-command="toggle" ${disabled}>Toggle</button>
+            <button class="button button-small" type="button" data-command="walk_home" ${disabled}>Walk home</button>
+          </div>
+        </div>
         <label class="full-width"><span>Webhook URL</span><input type="text" name="webhook" value="${escapeHtml(o.webhook)}" ${disabled}></label>
         <label class="checkbox-row"><input type="checkbox" name="randomStart" ${checked(o.randomStart)} ${disabled}><span>Random start</span></label>
         <label class="checkbox-row"><input type="checkbox" name="hiding" ${checked(o.hiding)} ${disabled}><span>Hidden-line removal</span></label>
@@ -260,6 +265,9 @@ function syncPlotConfigInteractivity (panelElement, status) {
   const locked = status === 'previewing' || status === 'plotting'
   for (const el of config.querySelectorAll('input, select, textarea')) {
     el.disabled = locked
+  }
+  for (const btn of config.querySelectorAll('.plot-config-command-buttons [data-command]')) {
+    btn.disabled = locked
   }
 }
 

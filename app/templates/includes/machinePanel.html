@@ -80,6 +80,13 @@
           {{/each}}
         </select>
       </label>
+      <div class="plot-config-command-cell" role="group" aria-label="Quick machine commands">
+        <span class="plot-config-field-heading">Pen</span>
+        <div class="plot-config-command-buttons">
+          <button class="button button-small" type="button" data-command="toggle">Toggle</button>
+          <button class="button button-small" type="button" data-command="walk_home">Walk home</button>
+        </div>
+      </div>
       <label class="full-width">
         <span>Webhook URL</span>
         <input type="text" name="webhook" value="{{options.webhook}}" placeholder="https://example.com">
