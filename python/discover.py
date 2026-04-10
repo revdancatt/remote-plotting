@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from common import emit, fail, import_nextdraw, run_quiet
+from common import apply_common_options, emit, fail, import_nextdraw, run_quiet, safe_int
 
 
 def machines_from_name_list(raw_entries):
@@ -41,6 +41,34 @@ def machines_from_name_list(raw_entries):
   return machines
 
 
+def read_firmware_nickname(NextDraw, port, model):
+  """
+  Ask the EBB for its stored nickname (same path as CLI read_name).
+  list_names alone can show only the USB path on some macOS + hardware combos.
+  """
+  try:
+    nd = NextDraw()
+    nd.plot_setup()
+    apply_common_options(nd, {"port": port, "model": model, "options": {"model": model}})
+    nd.options.mode = "utility"
+    nd.options.utility_cmd = "read_name"
+    quiet = run_quiet(lambda: nd.plot_run())
+    nick = (getattr(nd, "nickname", None) or "").strip()
+    if not nick:
+      machine = getattr(nd, "machine", None)
+      if machine is not None:
+        nick = (getattr(machine, "name", None) or "").strip()
+    if not nick:
+      for line in (quiet.get("stdout") or "").splitlines():
+        line = line.strip()
+        if line and not line.lower().startswith("note ("):
+          nick = line
+          break
+    return nick
+  except Exception:
+    return ""
+
+
 def main():
   try:
     NextDraw = import_nextdraw()
@@ -57,6 +85,19 @@ def main():
       parsed = machines_from_name_list(raw_list)
     else:
       parsed = []
+
+    default_model = safe_int(getattr(nd.options, "model", None), 8)
+
+    for entry in parsed:
+      port = entry.get("port", "")
+      usb_label = entry.get("name", "")
+      if not port:
+        continue
+      fw = read_firmware_nickname(NextDraw, port, default_model)
+      if fw:
+        entry["name"] = fw
+      else:
+        entry["name"] = usb_label
 
     emit({
       "machines": parsed
