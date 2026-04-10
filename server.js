@@ -69,7 +69,12 @@ const machineManager = createMachineManager({
   },
   virtualMachineEnabled: String(process.env.VIRTUAL_MACHINE || 'true') === 'true',
   virtualMachineName: process.env.VIRTUAL_MACHINE_NAME || 'Virtual Preview Machine',
-  virtualMachineCount: Number(process.env.VIRTUAL_MACHINE_COUNT || 1)
+  virtualMachineCount: (() => {
+    const raw = process.env.VIRTUAL_MACHINE_COUNT
+    if (raw === undefined || String(raw).trim() === '') return 1
+    const n = Number(raw)
+    return Number.isFinite(n) ? n : 1
+  })()
 })
 
 const broadcastEvents = [

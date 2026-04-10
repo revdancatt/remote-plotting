@@ -43,18 +43,19 @@ def run_command(payload):
 
 
 def rename_machine(payload):
-  machine_name = str(payload.get("name", "")).strip()
-  if not machine_name:
-    raise ValueError("Missing machine name")
+  write_name_val = str(payload.get("writeName", payload.get("name", ""))).strip()
+  if not write_name_val:
+    raise ValueError("Missing device nickname for write_name")
+  display_name = str(payload.get("displayName", write_name_val)).strip()
 
   NextDraw = import_nextdraw()
   nd = NextDraw()
   nd.plot_setup()
   apply_common_options(nd, payload)
   nd.options.mode = "utility"
-  nd.options.utility_cmd = f"write_name{machine_name}"
+  nd.options.utility_cmd = f"write_name{write_name_val}"
   run_quiet(lambda: nd.plot_run())
-  return {"ok": True, "result": f"Renamed to {machine_name}"}
+  return {"ok": True, "result": f"Renamed to {display_name}"}
 
 
 def main():

@@ -36,6 +36,26 @@ function assertRelativePath (relativePath) {
   return value
 }
 
+const PLOTTER_WRITE_NAME_MAX = 16
+
+/** NextDraw write_name payload: ≤16 chars, strip ASCII control chars; spaces and case kept. */
+function sanitizePlotterNicknameForWriteName (displayName) {
+  const trimmedOriginal = String(displayName || '').trim()
+  // Strip C0 control chars (not valid in a device nickname); allow normal spaces.
+  // eslint-disable-next-line no-control-regex -- intentional ASCII control strip
+  let s = trimmedOriginal.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '')
+  const chars = [...s]
+  if (chars.length > PLOTTER_WRITE_NAME_MAX) {
+    s = chars.slice(0, PLOTTER_WRITE_NAME_MAX).join('')
+  } else {
+    s = chars.join('')
+  }
+  if (!s && trimmedOriginal) {
+    s = [...trimmedOriginal].slice(0, PLOTTER_WRITE_NAME_MAX).join('')
+  }
+  return s
+}
+
 class MachineManager extends EventEmitter {
   constructor ({
     pythonBridge,
@@ -56,7 +76,8 @@ class MachineManager extends EventEmitter {
     }
     this.virtualMachineEnabled = virtualMachineEnabled
     this.virtualMachineName = virtualMachineName
-    this.virtualMachineCount = Math.min(5, Math.max(1, Number(virtualMachineCount ?? 1)))
+    const vmc = Number(virtualMachineCount ?? 1)
+    this.virtualMachineCount = Math.min(5, Math.max(0, Number.isFinite(vmc) ? vmc : 1))
     this.machines = new Map()
     this.activePlots = new Map()
   }
@@ -180,10 +201,19 @@ class MachineManager extends EventEmitter {
       throw error
     }
     const machine = this.getMachineOrThrow(machineId)
+    const writeName = sanitizePlotterNicknameForWriteName(trimmedName)
+    if (!writeName) {
+      const error = new Error('Name is required')
+      error.statusCode = 400
+      throw error
+    }
     if (!machine.isVirtual) {
       await this.pythonBridge.renameMachine({
         port: machine.port,
-        name: trimmedName
+        model: machine.options.model,
+        options: machine.options,
+        writeName,
+        displayName: trimmedName
       })
     }
     machine.displayName = trimmedName
