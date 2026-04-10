@@ -4,8 +4,8 @@
  * Respects prefers-reduced-motion.
  */
 
-const GRAVITY = 0.14
-const MAX_PARTICLES = 260
+const GRAVITY = 0.07
+const MAX_PARTICLES = 1080
 const SPAWN_INTERVAL_MS = 10
 
 let layer = null
