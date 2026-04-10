@@ -208,6 +208,10 @@ class MachineManager extends EventEmitter {
       throw error
     }
     if (!machine.isVirtual) {
+      const debugRename = ['1', 'true', 'yes'].includes(String(process.env.REMOTE_PLOTTING_DEBUG || '').toLowerCase())
+      if (debugRename) {
+        console.error('[remote-plotting:rename] machineId=%s port=%s writeName=%s displayName=%s', machineId, machine.port, writeName, trimmedName)
+      }
       await this.pythonBridge.renameMachine({
         port: machine.port,
         model: machine.options.model,

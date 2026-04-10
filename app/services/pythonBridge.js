@@ -2,6 +2,11 @@ import { EventEmitter } from 'node:events'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
 
+function isRemotePlottingDebug () {
+  const v = String(process.env.REMOTE_PLOTTING_DEBUG || '').toLowerCase()
+  return v === '1' || v === 'true' || v === 'yes'
+}
+
 function coerceBoolean (value) {
   if (typeof value === 'boolean') return value
   if (value === 'true') return true
@@ -222,13 +227,23 @@ class PythonBridge {
   }
 
   async renameMachine (payload) {
-    return this.runScript({
+    const fullPayload = {
+      ...payload,
+      action: 'rename'
+    }
+    if (isRemotePlottingDebug()) {
+      const scriptPath = this.scriptPath('command.py')
+      console.error('[remote-plotting:rename] spawn:', this.pythonBin, JSON.stringify([scriptPath]))
+      console.error('[remote-plotting:rename] command.py stdin (JSON):', JSON.stringify(fullPayload))
+    }
+    const result = await this.runScript({
       scriptName: 'command.py',
-      payload: {
-        ...payload,
-        action: 'rename'
-      }
+      payload: fullPayload
     })
+    if (isRemotePlottingDebug()) {
+      console.error('[remote-plotting:rename] command.py last JSON line:', JSON.stringify(result))
+    }
+    return result
   }
 }
 
