@@ -217,13 +217,23 @@ class PythonBridge {
 
   async command (payload) {
     const scriptName = coerceBoolean(payload?.isVirtual) ? 'virtual.py' : 'command.py'
-    return this.runScript({
+    const fullPayload = {
+      ...payload,
+      action: 'command'
+    }
+    if (isRemotePlottingDebug() && scriptName === 'command.py') {
+      const scriptPath = this.scriptPath('command.py')
+      console.error('[remote-plotting:command] spawn:', this.pythonBin, JSON.stringify([scriptPath]))
+      console.error('[remote-plotting:command] command.py stdin (JSON):', JSON.stringify(fullPayload))
+    }
+    const result = await this.runScript({
       scriptName,
-      payload: {
-        ...payload,
-        action: 'command'
-      }
+      payload: fullPayload
     })
+    if (isRemotePlottingDebug() && scriptName === 'command.py') {
+      console.error('[remote-plotting:command] command.py last JSON line:', JSON.stringify(result))
+    }
+    return result
   }
 
   async renameMachine (payload) {

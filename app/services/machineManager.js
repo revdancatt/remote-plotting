@@ -257,11 +257,16 @@ class MachineManager extends EventEmitter {
 
   async runCommand (machineId, command) {
     const machine = this.getMachineOrThrow(machineId)
+    const debugCmd = ['1', 'true', 'yes'].includes(String(process.env.REMOTE_PLOTTING_DEBUG || '').toLowerCase())
+    if (debugCmd) {
+      console.error('[remote-plotting:command] machineId=%s command=%s port=%s model=%s penlift=%s', machineId, command, machine.port, machine.options.model, machine.options.penlift)
+    }
     const result = await this.pythonBridge.command({
       isVirtual: machine.isVirtual,
       port: machine.port,
       command,
-      model: machine.options.model
+      model: machine.options.model,
+      options: machine.options
     })
     machine.status = 'idle'
     this.emit('machine:status', this.toPublicMachine(machine))

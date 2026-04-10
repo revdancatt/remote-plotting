@@ -5,10 +5,10 @@ import sys
 from common import apply_common_options, emit, fail, import_nextdraw, read_payload, run_quiet
 
 
-def _rename_debug(msg):
+def _debug_stderr(tag, msg):
   v = os.environ.get("REMOTE_PLOTTING_DEBUG", "").lower()
   if v in ("1", "true", "yes"):
-    print(f"[remote-plotting:rename] {msg}", file=sys.stderr, flush=True)
+    print(f"[remote-plotting:{tag}] {msg}", file=sys.stderr, flush=True)
 
 
 UTILITY_MAP = {
@@ -47,7 +47,18 @@ def run_command(payload):
   else:
     raise ValueError(f"Unknown command: {command}")
 
-  run_quiet(lambda: nd.plot_run())
+  util = getattr(nd.options, "utility_cmd", "")
+  _debug_stderr(
+    "command",
+    f"cmd={command!r} mode={nd.options.mode!r} utility_cmd={util!r} "
+    f"port={getattr(nd.options, 'port', '')!r} model={nd.options.model} penlift={nd.options.penlift}",
+  )
+  quiet = run_quiet(lambda: nd.plot_run())
+  out = (quiet.get("stdout") or "").strip()
+  err = (quiet.get("stderr") or "").strip()
+  if out or err:
+    _debug_stderr("command", f"plot_run captured stdout ({len(out)} chars): {out[:1500]}")
+    _debug_stderr("command", f"plot_run captured stderr ({len(err)} chars): {err[:1500]}")
   return {"ok": True, "result": f"Ran {command}"}
 
 
@@ -64,16 +75,17 @@ def rename_machine(payload):
   nd.options.mode = "utility"
   nd.options.utility_cmd = f"write_name{write_name_val}"
   port_set = str(payload.get("port", "")).strip()
-  _rename_debug(
+  _debug_stderr(
+    "rename",
     f"utility_cmd={nd.options.utility_cmd!r} port_payload={port_set!r} "
-    f"nd.options.port={getattr(nd.options, 'port', '')!r}"
+    f"nd.options.port={getattr(nd.options, 'port', '')!r}",
   )
   quiet = run_quiet(lambda: nd.plot_run())
   out = (quiet.get("stdout") or "").strip()
   err = (quiet.get("stderr") or "").strip()
   if out or err:
-    _rename_debug(f"plot_run captured stdout ({len(out)} chars): {out[:1500]}")
-    _rename_debug(f"plot_run captured stderr ({len(err)} chars): {err[:1500]}")
+    _debug_stderr("rename", f"plot_run captured stdout ({len(out)} chars): {out[:1500]}")
+    _debug_stderr("rename", f"plot_run captured stderr ({len(err)} chars): {err[:1500]}")
   return {"ok": True, "result": f"Renamed to {display_name}"}
 
 
