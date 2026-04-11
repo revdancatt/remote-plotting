@@ -9,7 +9,7 @@ export const MODEL_OPTIONS = [
   { value: 5, label: 'AxiDraw SE/A1' },
   { value: 6, label: 'AxiDraw SE/A2' },
   { value: 7, label: 'AxiDraw V3/B6' },
-  { value: 8, label: 'Bantam Tools NextDraw 8511 (default)' },
+  { value: 8, label: 'Bantam Tools NextDraw 8511' },
   { value: 9, label: 'Bantam Tools NextDraw 1117' },
   { value: 10, label: 'Bantam Tools NextDraw 2234' }
 ]
