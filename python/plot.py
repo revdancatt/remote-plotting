@@ -26,54 +26,33 @@ def resolve_file_path(relative_path):
   return str(candidate)
 
 
+def enable_strict_errors(nd):
+  """
+  By default NextDraw's Python API swallows connect/button/disconnect/power/
+  homing failures: `plot_run()` returns quietly and leaves the caller to
+  infer that nothing happened. Flipping these flags makes `handle_errors()`
+  raise a `RuntimeError` that we can surface as a proper `status: error`.
+  """
+  errors_cfg = getattr(nd, "errors", None)
+  if errors_cfg is None:
+    return
+  for flag in ("connect", "button", "keyboard", "disconnect", "power", "homing"):
+    try:
+      setattr(errors_cfg, flag, True)
+    except AttributeError:
+      pass
+
+
 def estimate_plot_time(NextDraw, file_path, payload):
   nd = NextDraw()
   nd.plot_setup(file_path)
   apply_common_options(nd, payload)
   nd.options.preview = True
   nd.options.report_time = True
+  # Preview doesn't touch serial, but enable strict mode anyway for symmetry.
+  enable_strict_errors(nd)
   run_quiet(lambda: nd.plot_run())
   return safe_float(getattr(nd, "time_estimate", 0))
-
-
-def collect_plot_errors(nd, quiet):
-  """
-  NextDraw swallows certain failures (serial connect, machine.err, logged
-  ERROR messages) and `plot_run()` simply returns. Without this inspection
-  plot.py would happily emit `status: complete` for a plot that never ran.
-  """
-  errors = []
-  machine = getattr(nd, "machine", None)
-  machine_err = getattr(machine, "err", None) if machine is not None else None
-  if machine_err:
-    errors.append(str(machine_err).strip())
-
-  error_out = str(getattr(nd, "error_out", "") or "").strip()
-  if error_out:
-    errors.append(error_out)
-
-  plot_status = getattr(nd, "plot_status", None)
-  stopped = 0
-  try:
-    stopped = int(getattr(plot_status, "stopped", 0) or 0)
-  except (TypeError, ValueError):
-    stopped = 0
-  if stopped:
-    errors.append(f"NextDraw stopped before finishing (code {stopped})")
-
-  # A real plot emits at least some motor traffic to the user log; if stderr
-  # looks like a traceback or "Error:" line, surface it rather than treating
-  # the run as successful.
-  captured_stdout = (quiet.get("stdout") or "").strip()
-  captured_stderr = (quiet.get("stderr") or "").strip()
-  stderr_error_lines = [
-    line for line in captured_stderr.splitlines()
-    if line.strip().lower().startswith(("error", "traceback", "exception"))
-  ]
-  if stderr_error_lines:
-    errors.append("\n".join(stderr_error_lines))
-
-  return errors, captured_stdout, captured_stderr
 
 
 def main():
@@ -97,29 +76,48 @@ def main():
     apply_common_options(nd, payload)
     nd.options.preview = False
     nd.options.report_time = True
+    enable_strict_errors(nd)
     quiet = run_quiet(lambda: nd.plot_run())
 
-    errors, captured_stdout, captured_stderr = collect_plot_errors(nd, quiet)
     time_elapsed = safe_float(getattr(nd, "time_elapsed", 0))
+    distance_pendown = safe_float(getattr(nd, "distance_pendown", 0))
+    distance_total = safe_float(getattr(nd, "distance_total", 0))
+    stopped = int(getattr(getattr(nd, "plot_status", None), "stopped", 0) or 0)
+    captured_stdout = (quiet.get("stdout") or "").strip()
+    captured_stderr = (quiet.get("stderr") or "").strip()
 
     debug_log(
       "plot",
-      f"plot_run finished: time_elapsed={time_elapsed:.3f}s errors={len(errors)}",
+      f"plot_run finished: elapsed={time_elapsed:.3f}s distance_total={distance_total:.3f}m "
+      f"pen_lifts={int(getattr(nd, 'pen_lifts', 0) or 0)} stopped={stopped}",
     )
     if captured_stdout:
       debug_log("plot", f"plot_run stdout ({len(captured_stdout)} chars): {captured_stdout[:1500]}")
     if captured_stderr:
       debug_log("plot", f"plot_run stderr ({len(captured_stderr)} chars): {captured_stderr[:1500]}")
 
-    if errors:
-      fail("Plot did not complete: " + " | ".join(errors))
+    # Strict errors should have raised already, but as a belt-and-braces
+    # guard: a non-preview plot with estimate > 0 that reports zero travel
+    # almost certainly means the run never reached the motors.
+    if distance_total <= 0 and estimate > 1:
+      details = []
+      if captured_stderr:
+        details.append(captured_stderr[:500])
+      if captured_stdout:
+        details.append(captured_stdout[:500])
+      extra = ("\n\nNextDraw output:\n" + "\n---\n".join(details)) if details else ""
+      fail(
+        "Plot reported no travel but the estimate was "
+        f"{estimate:.1f}s — the plotter likely failed to connect or start."
+        + extra
+      )
       return
 
     emit({
       "status": "complete",
       "timeElapsed": time_elapsed,
-      "distancePenDown": safe_float(getattr(nd, "distance_pendown", 0)),
-      "distanceTotal": safe_float(getattr(nd, "distance_total", 0)),
+      "distancePenDown": distance_pendown,
+      "distanceTotal": distance_total,
       "usedPlob": bool(used_plob),
     })
   except Exception as error:

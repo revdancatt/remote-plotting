@@ -69,17 +69,25 @@ function setupProcessParser (child, onJson) {
     jsonMessages: []
   }
 
+  const debug = isRemotePlottingDebug()
+
   function handleLine (streamName, line) {
     const trimmed = String(line || '').trim()
     if (!trimmed) return
     const parsed = parseJsonLine(trimmed)
     if (parsed && typeof parsed === 'object') {
       state.jsonMessages.push(parsed)
+      if (debug) {
+        process.stderr.write(`[python:${streamName}:json] ${JSON.stringify(parsed)}\n`)
+      }
       if (typeof onJson === 'function') onJson(parsed)
       return
     }
     if (streamName === 'stdout') state.stdoutTextLines.push(trimmed)
     else state.stderrTextLines.push(trimmed)
+    if (debug) {
+      process.stderr.write(`[python:${streamName}] ${trimmed}\n`)
+    }
   }
 
   child.stdout.on('data', (chunk) => {
