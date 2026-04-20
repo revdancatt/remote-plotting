@@ -104,6 +104,10 @@ class FileManager {
   async deleteFile (relativePath) {
     const target = this.resolveSafePath(relativePath)
     await fs.rm(target)
+    // Clean up the cached plob sibling (see python/common.py resolve_cached_source).
+    if (target.toLowerCase().endsWith('.svg')) {
+      await fs.rm(`${target}.plob`, { force: true })
+    }
   }
 
   async createDirectory ({ dir = '', name = '' }) {

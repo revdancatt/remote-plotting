@@ -2,7 +2,17 @@
 import os
 from pathlib import Path
 
-from common import apply_common_options, emit, fail, import_nextdraw, read_payload, run_quiet, safe_float
+from common import (
+  apply_common_options,
+  debug_log,
+  emit,
+  fail,
+  import_nextdraw,
+  read_payload,
+  resolve_cached_source,
+  run_quiet,
+  safe_float,
+)
 
 
 def resolve_file_path(relative_path):
@@ -19,11 +29,14 @@ def resolve_file_path(relative_path):
 def main():
   payload = read_payload()
   try:
-    file_path = resolve_file_path(payload.get("filePath", ""))
+    svg_path = resolve_file_path(payload.get("filePath", ""))
     NextDraw = import_nextdraw()
 
+    source_path, used_plob = resolve_cached_source(NextDraw, svg_path, payload)
+    debug_log("preview", f"source={source_path} used_plob={used_plob}")
+
     nd = NextDraw()
-    nd.plot_setup(file_path)
+    nd.plot_setup(source_path)
     apply_common_options(nd, payload)
     nd.options.preview = True
     nd.options.report_time = True
@@ -34,7 +47,8 @@ def main():
       "timeEstimate": safe_float(getattr(nd, "time_estimate", 0)),
       "distancePenDown": safe_float(getattr(nd, "distance_pendown", 0)),
       "distanceTotal": safe_float(getattr(nd, "distance_total", 0)),
-      "penLifts": int(getattr(nd, "pen_lifts", 0))
+      "penLifts": int(getattr(nd, "pen_lifts", 0)),
+      "usedPlob": bool(used_plob),
     })
   except Exception as error:
     fail(str(error))

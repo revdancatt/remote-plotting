@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-import os
-import sys
-
-from common import apply_common_options, emit, fail, import_nextdraw, read_payload, run_quiet
-
-
-def _debug_stderr(tag, msg):
-  v = os.environ.get("REMOTE_PLOTTING_DEBUG", "").lower()
-  if v in ("1", "true", "yes"):
-    print(f"[remote-plotting:{tag}] {msg}", file=sys.stderr, flush=True)
+from common import (
+  apply_common_options,
+  debug_log as _debug_stderr,
+  emit,
+  fail,
+  import_nextdraw,
+  read_payload,
+  run_quiet,
+)
 
 
 UTILITY_MAP = {

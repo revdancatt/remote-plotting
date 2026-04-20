@@ -2,7 +2,17 @@
 import os
 from pathlib import Path
 
-from common import apply_common_options, emit, fail, import_nextdraw, read_payload, run_quiet, safe_float
+from common import (
+  apply_common_options,
+  debug_log,
+  emit,
+  fail,
+  import_nextdraw,
+  read_payload,
+  resolve_cached_source,
+  run_quiet,
+  safe_float,
+)
 
 
 def resolve_file_path(relative_path):
@@ -29,17 +39,21 @@ def estimate_plot_time(NextDraw, file_path, payload):
 def main():
   payload = read_payload()
   try:
-    file_path = resolve_file_path(payload.get("filePath", ""))
+    svg_path = resolve_file_path(payload.get("filePath", ""))
     NextDraw = import_nextdraw()
 
-    estimate = estimate_plot_time(NextDraw, file_path, payload)
+    source_path, used_plob = resolve_cached_source(NextDraw, svg_path, payload)
+    debug_log("plot", f"source={source_path} used_plob={used_plob}")
+
+    estimate = estimate_plot_time(NextDraw, source_path, payload)
     emit({
       "status": "started",
-      "timeEstimate": estimate
+      "timeEstimate": estimate,
+      "usedPlob": bool(used_plob),
     })
 
     nd = NextDraw()
-    nd.plot_setup(file_path)
+    nd.plot_setup(source_path)
     apply_common_options(nd, payload)
     nd.options.preview = False
     nd.options.report_time = True
@@ -49,7 +63,8 @@ def main():
       "status": "complete",
       "timeElapsed": safe_float(getattr(nd, "time_elapsed", 0)),
       "distancePenDown": safe_float(getattr(nd, "distance_pendown", 0)),
-      "distanceTotal": safe_float(getattr(nd, "distance_total", 0))
+      "distanceTotal": safe_float(getattr(nd, "distance_total", 0)),
+      "usedPlob": bool(used_plob),
     })
   except Exception as error:
     fail(str(error))
