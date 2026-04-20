@@ -248,6 +248,22 @@ document.addEventListener('click', async (event) => {
   const machine = getPanelMachine(panel)
   if (!machine) return
 
+  /* Clear the SVG currently assigned to this plotter — restores the tile to empty. */
+  if (event.target.closest('[data-action="clear-assignment"]')) {
+    event.preventDefault()
+    event.stopPropagation()
+    if (machine.status === 'plotting' || machine.status === 'previewing') {
+      toastWarning('Cannot clear while the plotter is busy.')
+      return
+    }
+    delete state.selectedFiles[machine.id]
+    updateMachinePanelSvgPreview(machine.id)
+    panel.querySelector('[data-role="preview-stats"]')?.remove()
+    updateSidebarFooter()
+    fileBrowser.syncHighlight()
+    return
+  }
+
   /* Dismiss error/complete — must sync server or next save replays stale status (e.g. complete banner). */
   if (event.target.closest('[data-action="dismiss-error"]') || event.target.closest('[data-action="dismiss-complete"]')) {
     try {

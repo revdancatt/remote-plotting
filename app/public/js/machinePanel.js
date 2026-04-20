@@ -69,6 +69,9 @@ function machineSvgPreviewSection () {
     <section class="machine-svg-preview" data-role="machine-svg-preview">
       <div class="machine-svg-preview-inner hidden" data-role="svg-preview-inner">
         <div class="machine-svg-preview-paper">
+          <button class="button-icon machine-svg-preview-clear" type="button"
+            data-action="clear-assignment" title="Clear SVG from this plotter"
+            aria-label="Clear SVG from this plotter">&times;</button>
           <img data-role="svg-preview-img" src="" alt="">
         </div>
         <p class="machine-svg-preview-caption" data-role="svg-preview-caption"></p>

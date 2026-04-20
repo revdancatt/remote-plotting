@@ -61,6 +61,43 @@ export function initFileBrowser ({
   const sidebarPanel = document.getElementById('file-browser-panel')
 
   let currentDir = breadcrumb?.dataset.currentDir || ''
+  const fileInput = uploadForm?.querySelector('input[type="file"]')
+
+  async function extractErrorMessage (response, fallback) {
+    const contentType = response.headers.get('content-type') || ''
+    try {
+      if (contentType.includes('application/json')) {
+        const data = await response.json()
+        return data.errorMessage || data.message || data.error || fallback
+      }
+      const text = (await response.text()).trim()
+      return text || response.statusText || fallback
+    } catch (_err) {
+      return response.statusText || fallback
+    }
+  }
+
+  async function uploadFile (file) {
+    if (!file) return
+    if (!/\.svg$/i.test(file.name)) {
+      toastWarning('Only SVG files are supported')
+      return
+    }
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('dir', currentDir)
+    try {
+      const response = await fetch('/api/files/upload', { method: 'POST', body: formData })
+      if (!response.ok) {
+        throw new Error(await extractErrorMessage(response, 'Upload failed'))
+      }
+      toastSuccess(`Uploaded ${file.name}`)
+      uploadForm?.reset()
+      await refresh(currentDir)
+    } catch (error) {
+      toastError(error.message || 'Upload failed')
+    }
+  }
 
   function highlightSelected () {
     const path = typeof getHighlightPath === 'function' ? getHighlightPath() : null
@@ -97,42 +134,30 @@ export function initFileBrowser ({
 
   /* ─── Drag-and-drop on upload zone ─── */
   if (uploadZone) {
-    ;['dragenter', 'dragover'].forEach((evt) => {
+    for (const evt of ['dragenter', 'dragover']) {
       uploadZone.addEventListener(evt, (e) => {
         e.preventDefault()
         uploadZone.classList.add('is-dragover')
       })
-    })
-    ;['dragleave', 'drop'].forEach((evt) => {
-      uploadZone.addEventListener(evt, () => {
-        uploadZone.classList.remove('is-dragover')
-      })
+    }
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('is-dragover')
     })
     uploadZone.addEventListener('drop', async (e) => {
       e.preventDefault()
-      const files = e.dataTransfer?.files
-      if (!files?.length) return
-      const file = files[0]
-      if (!file.name.endsWith('.svg')) {
-        toastWarning('Only SVG files are supported')
-        return
-      }
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('dir', currentDir)
-      try {
-        const response = await fetch('/api/files/upload', { method: 'POST', body: formData })
-        if (!response.ok) {
-          const err = await response.json()
-          throw new Error(err.message || 'Upload failed')
-        }
-        toastSuccess(`Uploaded ${file.name}`)
-        await refresh(currentDir)
-      } catch (error) {
-        toastError(error.message)
-      }
+      uploadZone.classList.remove('is-dragover')
+      const file = e.dataTransfer?.files?.[0]
+      if (!file) return
+      await uploadFile(file)
     })
   }
+
+  /* ─── Click-to-pick: native file input auto-submits on change ─── */
+  fileInput?.addEventListener('change', async () => {
+    const file = fileInput.files?.[0]
+    if (!file) return
+    await uploadFile(file)
+  })
 
   /* ─── Sidebar collapse (panel + grid column — see .dashboard-layout--sidebar-collapsed) ─── */
   const dashboardLayout = sidebarPanel?.closest('.dashboard-layout')
@@ -168,12 +193,15 @@ export function initFileBrowser ({
       const fileName = relativePath.split('/').pop()
       toastWarning(`Deleting ${fileName}…`)
       try {
-        await fetch(`/api/files?path=${encodeURIComponent(relativePath)}`, { method: 'DELETE' })
+        const response = await fetch(`/api/files?path=${encodeURIComponent(relativePath)}`, { method: 'DELETE' })
+        if (!response.ok) {
+          throw new Error(await extractErrorMessage(response, 'Delete failed'))
+        }
         if (typeof onFileDeleted === 'function') onFileDeleted(relativePath)
         await refresh(currentDir)
         toastSuccess(`Deleted ${fileName}`)
       } catch (error) {
-        toastError(error.message)
+        toastError(error.message || 'Delete failed')
       }
       return
     }
@@ -184,41 +212,34 @@ export function initFileBrowser ({
     }
   })
 
-  /* ─── Upload via form ─── */
+  /* ─── Upload via form (Enter-key fallback when input has a file) ─── */
   uploadForm?.addEventListener('submit', async (event) => {
     event.preventDefault()
-    const formData = new FormData(uploadForm)
-    formData.append('dir', currentDir)
-    try {
-      const response = await fetch('/api/files/upload', { method: 'POST', body: formData })
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Upload failed')
-      }
-      toastSuccess('File uploaded')
-      uploadForm.reset()
-      await refresh(currentDir)
-    } catch (error) {
-      toastError(error.message)
-    }
+    const file = fileInput?.files?.[0]
+    if (!file) return
+    await uploadFile(file)
   })
 
   /* ─── Mkdir ─── */
   mkdirForm?.addEventListener('submit', async (event) => {
     event.preventDefault()
     const form = new FormData(mkdirForm)
-    const name = form.get('name')
+    const name = String(form.get('name') || '').trim()
+    if (!name) return
     try {
-      await fetch('/api/files/mkdir', {
+      const response = await fetch('/api/files/mkdir', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dir: currentDir, name })
       })
+      if (!response.ok) {
+        throw new Error(await extractErrorMessage(response, 'Could not create folder'))
+      }
       toastSuccess(`Created folder "${name}"`)
       mkdirForm.reset()
       await refresh(currentDir)
     } catch (error) {
-      toastError(error.message)
+      toastError(error.message || 'Could not create folder')
     }
   })
 

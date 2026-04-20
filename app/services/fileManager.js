@@ -90,10 +90,25 @@ class FileManager {
   }
 
   async saveUploadedFile ({ buffer, fileName, relativeDir = '' }) {
-    const safeName = path.basename(fileName)
+    const safeName = path.basename(String(fileName || '').trim())
+    if (!safeName) {
+      const err = new Error('Missing file name')
+      err.statusCode = 400
+      throw err
+    }
+    if (!safeName.toLowerCase().endsWith('.svg')) {
+      const err = new Error('Only SVG files are supported')
+      err.statusCode = 400
+      throw err
+    }
     const targetDir = this.resolveSafePath(relativeDir)
     await fs.mkdir(targetDir, { recursive: true })
     const destination = path.join(targetDir, safeName)
+    if (!destination.startsWith(this.baseDir)) {
+      const err = new Error('Invalid destination path')
+      err.statusCode = 400
+      throw err
+    }
     await fs.writeFile(destination, buffer)
     return {
       name: safeName,

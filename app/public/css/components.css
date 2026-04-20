@@ -363,6 +363,7 @@ select {
 
 /* White “paper” only wraps the graphic (aspect of the sheet), not the full panel width */
 .machine-svg-preview-paper {
+  position: relative;
   display: inline-block;
   width: fit-content;
   max-width: 100%;
@@ -383,6 +384,27 @@ select {
   width: auto;
   height: auto;
   object-fit: contain;
+}
+
+.machine-svg-preview-clear {
+  position: absolute;
+  top: calc(var(--space-1) * -1);
+  right: calc(var(--space-1) * -1);
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border-radius: 999px;
+  line-height: 1;
+  font-size: var(--text-base);
+  opacity: 0.55;
+  transition: opacity var(--transition-fast);
+  z-index: 1;
+}
+
+.machine-svg-preview-inner:hover .machine-svg-preview-clear,
+.machine-svg-preview-clear:hover,
+.machine-svg-preview-clear:focus-visible {
+  opacity: 1;
 }
 
 .machine-svg-preview-caption {

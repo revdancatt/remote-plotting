@@ -111,7 +111,9 @@ app.use((req, res) => {
   })
 })
 
-app.use((err, req, res) => {
+// Express only treats this as an error handler when it has 4 parameters.
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   const statusCode = Number(err.statusCode || err.status || 500)
   const safeMessage = statusCode >= 500 && isProd ? 'Unexpected server error' : err.message
   if (!isProd) console.error(err)
