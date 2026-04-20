@@ -26,6 +26,13 @@ function hasOptionValues (options) {
   return Boolean(options && typeof options === 'object' && Object.keys(options).length > 0)
 }
 
+const PREVIEW_AFFECTING_OPTIONS = ['speed', 'handling', 'reordering', 'hiding', 'randomStart', 'model']
+
+function previewAffectingOptionsChanged (previous, next) {
+  if (!previous) return true
+  return PREVIEW_AFFECTING_OPTIONS.some((key) => previous[key] !== next[key])
+}
+
 function assertRelativePath (relativePath) {
   const value = String(relativePath || '').trim()
   if (!value) {
@@ -229,7 +236,14 @@ class MachineManager extends EventEmitter {
 
   async setMachineOptions (machineId, options = {}) {
     const machine = this.getMachineOrThrow(machineId)
+    const previous = machine.options
     machine.options = normalizeOptions(options, this.defaults)
+    // Preview numbers (timeEstimate / distances / pen lifts) are tied to the options used
+    // to generate them — speed/handling/reordering/hiding all affect at least one of them.
+    // If anything relevant changed, discard the preview so the UI doesn't show stale figures.
+    if (machine.preview && previewAffectingOptionsChanged(previous, machine.options)) {
+      machine.preview = null
+    }
     await this.persistMachineState(machine)
     this.emit('machine:status', this.toPublicMachine(machine))
     this.emitMachinesList()

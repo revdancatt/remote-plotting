@@ -60,6 +60,16 @@ function updateSidebarFooter () {
   }
 }
 
+/** Drop the "Estimate / Pen-down / Total dist / Pen lifts" block — stats tied to a stale file/options. */
+function clearMachinePreviewStats (machineId) {
+  const i = findMachineIndex(machineId)
+  if (i !== -1) state.machines[i].preview = null
+  const panel = machineGrid.querySelector(
+    `.machine-panel[data-machine-id="${window.CSS.escape(machineId)}"]`
+  )
+  panel?.querySelector('[data-role="preview-stats"]')?.remove()
+}
+
 function updateMachinePanelSvgPreview (machineId) {
   const panel = machineGrid.querySelector(
     `.machine-panel[data-machine-id="${window.CSS.escape(machineId)}"]`
@@ -258,7 +268,7 @@ document.addEventListener('click', async (event) => {
     }
     delete state.selectedFiles[machine.id]
     updateMachinePanelSvgPreview(machine.id)
-    panel.querySelector('[data-role="preview-stats"]')?.remove()
+    clearMachinePreviewStats(machine.id)
     updateSidebarFooter()
     fileBrowser.syncHighlight()
     return
@@ -466,8 +476,14 @@ const fileBrowser = initFileBrowser({
       toastWarning('Click a machine panel first to choose where the file goes.')
       return
     }
-    state.selectedFiles[state.activeMachineId] = relativePath
-    updateMachinePanelSvgPreview(state.activeMachineId)
+    const machineId = state.activeMachineId
+    const previousPath = state.selectedFiles[machineId]
+    state.selectedFiles[machineId] = relativePath
+    updateMachinePanelSvgPreview(machineId)
+    if (previousPath !== relativePath) {
+      // Preview stats were computed for the previous SVG; drop them so we don't mislead with stale numbers.
+      clearMachinePreviewStats(machineId)
+    }
     updateSidebarFooter()
   },
   onFileDeleted: (relativePath) => {

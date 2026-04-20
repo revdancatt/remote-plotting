@@ -332,14 +332,16 @@ export function patchPanel (panelElement, machine) {
     plotBtn.disabled = newStatus === 'plotting' || newStatus === 'previewing'
   }
 
-  if (machine.preview && currentStatus !== newStatus) {
-    const existing = panelElement.querySelector('[data-role="preview-stats"]')
+  const existingStats = panelElement.querySelector('[data-role="preview-stats"]')
+  if (!machine.preview) {
+    existingStats?.remove()
+  } else if (currentStatus !== newStatus) {
     const html = previewStatsBlock(machine)
-    if (html && !existing) {
+    if (html && !existingStats) {
       const controls = panelElement.querySelector('[data-role="plot-controls"]')
       if (controls) controls.insertAdjacentHTML('beforebegin', html)
-    } else if (html && existing) {
-      existing.outerHTML = html
+    } else if (html && existingStats) {
+      existingStats.outerHTML = html
     }
   }
 
