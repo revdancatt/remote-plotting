@@ -35,7 +35,7 @@ Small **Node** web app that runs on the machine attached to your plotter. It tal
 
 ## Usage (very short)
 
-Discover machines, pick an SVG from the library, assign it to a machine panel, **Preview** then **Plot**. Real hardware and optional **virtual** machines are supported. API / socket details: [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md).
+Discover machines, pick an SVG from the library, assign it to a machine panel, **Preview** then **Plot**. Real hardware and optional **virtual** machines are supported.
 
 ---
 
