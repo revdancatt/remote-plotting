@@ -2,6 +2,8 @@
 
 Small **Node** web app that runs on the machine attached to your plotter. It talks to hardware through **Python** scripts (preview, plot, discover, commands). Use it on your LAN from a browser; tested mainly on macOS.
 
+![MVPT dashboard in use](README-imgs/in-action.jpg)
+
 ---
 
 ## Install (short version)
