@@ -43,8 +43,3 @@ Discover machines, pick an SVG from the library, assign it to a machine panel, *
 
 This is a personal tool with light guardrails. Don’t expose it raw to the internet. Avoid running the server under a process manager that breaks clean child processes if plotting acts up — `npm start` directly is the simple path.
 
----
-
-## License
-
-MIT — see [LICENSE](LICENSE).
