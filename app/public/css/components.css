@@ -334,15 +334,57 @@ select {
     box-shadow var(--transition-slow);
 }
 
-.machine-panel--active {
+/* Selected machine indicator — theme-agnostic via outline + primary tint.
+   Outline is used instead of box-shadow so it stacks cleanly with the
+   plotting pulse shadow and any theme-specific panel shadows. */
+.machine-panel.machine-panel--active {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-color: color-mix(in srgb, var(--primary) 60%, var(--border));
   box-shadow:
-    var(--shadow),
-    0 0 0 2px var(--primary);
-  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    var(--shadow-lg),
+    0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent),
+    0 12px 36px color-mix(in srgb, var(--primary) 18%, transparent);
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--primary) 7%, transparent),
+    color-mix(in srgb, var(--primary) 7%, transparent)
+  );
 }
 
-.machine-panel--active .machine-panel-header h3 {
+.machine-panel.machine-panel--active .machine-panel-header h3 {
   color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.machine-panel.machine-panel--active .machine-panel-header h3::before {
+  content: '';
+  display: inline-block;
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, transparent);
+  animation: activeDotPulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes activeDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, transparent);
+  }
+  50% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .machine-panel.machine-panel--active .machine-panel-header h3::before {
+    animation: none;
+  }
 }
 
 /* ─── Per-machine SVG preview (assigned file) ─── */

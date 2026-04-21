@@ -2,8 +2,6 @@
 
 Small **Node** web app that runs on the machine attached to your plotter. It talks to hardware through **Python** scripts (preview, plot, discover, commands). Use it on your LAN from a browser; tested mainly on macOS.
 
-![UI](https://raw.githubusercontent.com/revdancatt/remote-plotting/master/README-imgs/ui.png?token=GHSAT0AAAAAACBGWLNWNW7IITEBH6QPZKOKZB6SOFQ)
-
 ---
 
 ## Install (short version)
